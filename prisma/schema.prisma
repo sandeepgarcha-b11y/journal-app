@@ -32,3 +32,15 @@ model MoodLog {
   @@unique([date])
   @@index([date])
 }
+
+model Review {
+  id        String   @id @default(cuid())
+  type      String   // "WEEKLY" | "MONTHLY" | "YEARLY"
+  periodKey String   // "2026-W09" | "2026-03" | "2026"
+  sections  String   // JSON: [{prompt: string, answer: string}]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([type, periodKey]) // one review per period
+  @@index([type, periodKey])
+}

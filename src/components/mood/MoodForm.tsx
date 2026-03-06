@@ -32,8 +32,15 @@ interface MoodFormProps {
 
 export function MoodForm({ existing }: MoodFormProps) {
   const [score, setScore] = useState(existing?.score ?? 5);
+  const [note, setNote] = useState(existing?.note ?? "");
   const today = todayDateString();
   const isEdit = existing !== null;
+
+  // Wrap the server action so we can clear the note field after a successful save.
+  async function handleAction(formData: FormData) {
+    await logMood(formData);
+    setNote("");
+  }
 
   return (
     <div className="rounded-xl border border-stone-200 bg-white p-6 shadow-sm">
@@ -47,7 +54,7 @@ export function MoodForm({ existing }: MoodFormProps) {
         </span>
       </div>
 
-      <form action={logMood} className="flex flex-col gap-5">
+      <form action={handleAction} className="flex flex-col gap-5">
         <input type="hidden" name="date" value={today} />
 
         {/* Score slider */}
@@ -101,7 +108,8 @@ export function MoodForm({ existing }: MoodFormProps) {
             id="mood-note"
             name="note"
             rows={3}
-            defaultValue={existing?.note ?? ""}
+            value={note}
+            onChange={(e) => setNote(e.target.value)}
             placeholder="What's influencing your mood today?"
             className="w-full resize-none rounded-lg border border-stone-300 bg-white px-4 py-3 text-sm text-stone-800 leading-relaxed shadow-sm transition focus:border-stone-500 focus:outline-none focus:ring-2 focus:ring-stone-200 placeholder:text-stone-300"
           />
