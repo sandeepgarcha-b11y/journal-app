@@ -25,7 +25,12 @@ export default async function MoodPage() {
       </div>
 
       {/* Log / edit form */}
-      <MoodForm existing={todayLog} />
+      {/* key changes whenever the saved record changes, forcing a clean remount so
+          useState and defaultValue always reflect the persisted data. */}
+      <MoodForm
+        key={todayLog?.updatedAt?.toISOString() ?? "new"}
+        existing={todayLog}
+      />
 
       {/* History */}
       <div>
