@@ -9,7 +9,7 @@ interface Props {
 }
 
 export function AffirmationCard({ affirmation }: Props) {
-  const [isFav, setIsFav] = useState(affirmation.isFavourite);
+  const [isFav, setIsFav]   = useState(affirmation.isFavourite);
   const [pending, setPending] = useState(false);
 
   async function handleToggle() {
@@ -23,13 +23,13 @@ export function AffirmationCard({ affirmation }: Props) {
   }
 
   return (
-    <div className="flex items-start justify-between gap-3 rounded-xl border border-stone-200 bg-white px-5 py-4 shadow-sm">
+    <div className="flex items-start justify-between gap-3 rounded-2xl border border-cream-200 bg-white px-5 py-4 shadow-warm-sm transition-all duration-150 hover:-translate-y-0.5 hover:shadow-warm">
       <p className="text-sm leading-relaxed text-stone-700">{affirmation.text}</p>
       <button
         onClick={handleToggle}
         disabled={pending}
         title={isFav ? "Remove from favourites" : "Add to favourites"}
-        className={`mt-0.5 shrink-0 text-lg transition hover:scale-110 disabled:opacity-50 ${
+        className={`mt-0.5 shrink-0 text-lg transition-all duration-150 hover:scale-110 disabled:opacity-50 ${
           isFav ? "text-amber-400" : "text-stone-300 hover:text-amber-300"
         }`}
         aria-label={isFav ? "Remove from favourites" : "Add to favourites"}

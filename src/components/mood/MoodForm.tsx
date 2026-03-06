@@ -18,12 +18,11 @@ const SCORE_LABELS: Record<number, string> = {
   10: "Excellent",
 };
 
-// Maps score to a Tailwind text colour class
 function scoreColour(score: number): string {
   if (score <= 3) return "text-red-500";
   if (score <= 5) return "text-amber-500";
-  if (score <= 7) return "text-yellow-500";
-  return "text-emerald-500";
+  if (score <= 7) return "text-amber-600";
+  return "text-sage-500";
 }
 
 interface MoodFormProps {
@@ -32,18 +31,17 @@ interface MoodFormProps {
 
 export function MoodForm({ existing }: MoodFormProps) {
   const [score, setScore] = useState(existing?.score ?? 5);
-  const [note, setNote] = useState(existing?.note ?? "");
-  const today = todayDateString();
+  const [note, setNote]   = useState(existing?.note ?? "");
+  const today  = todayDateString();
   const isEdit = existing !== null;
 
-  // Wrap the server action so we can clear the note field after a successful save.
   async function handleAction(formData: FormData) {
     await logMood(formData);
     setNote("");
   }
 
   return (
-    <div className="rounded-xl border border-stone-200 bg-white p-6 shadow-sm">
+    <div className="rounded-2xl border border-cream-200 bg-white p-6 shadow-warm-sm">
       <div className="mb-5 flex items-center justify-between">
         <h2 className="text-base font-semibold text-stone-800">
           {isEdit ? "Update today's mood" : "Log today's mood"}
@@ -58,7 +56,7 @@ export function MoodForm({ existing }: MoodFormProps) {
         <input type="hidden" name="date" value={today} />
 
         {/* Score slider */}
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-3">
           <div className="flex items-center justify-between text-xs text-stone-400">
             <span>1 — Terrible</span>
             <span className={`font-medium ${scoreColour(score)}`}>
@@ -74,19 +72,19 @@ export function MoodForm({ existing }: MoodFormProps) {
             step={1}
             value={score}
             onChange={(e) => setScore(Number(e.target.value))}
-            className="w-full accent-stone-800"
+            className="w-full accent-terracotta-500"
           />
           {/* Score pip row */}
-          <div className="flex justify-between px-0.5">
+          <div className="flex justify-between">
             {Array.from({ length: 10 }, (_, i) => i + 1).map((n) => (
               <button
                 key={n}
                 type="button"
                 onClick={() => setScore(n)}
-                className={`h-6 w-6 rounded-full text-xs font-medium transition ${
+                className={`h-7 w-7 rounded-full text-xs font-medium transition-all duration-150 hover:-translate-y-px ${
                   n === score
-                    ? "bg-stone-800 text-white"
-                    : "bg-stone-100 text-stone-500 hover:bg-stone-200"
+                    ? "bg-terracotta-500 text-white shadow-warm-sm"
+                    : "bg-cream-100 text-stone-500 hover:bg-cream-200"
                 }`}
               >
                 {n}
@@ -96,11 +94,8 @@ export function MoodForm({ existing }: MoodFormProps) {
         </div>
 
         {/* Optional note */}
-        <div className="flex flex-col gap-1.5">
-          <label
-            htmlFor="mood-note"
-            className="text-sm font-medium text-stone-700"
-          >
+        <div className="flex flex-col gap-2">
+          <label htmlFor="mood-note" className="text-sm font-medium text-stone-700">
             Note{" "}
             <span className="font-normal text-stone-400">(optional)</span>
           </label>
@@ -111,14 +106,14 @@ export function MoodForm({ existing }: MoodFormProps) {
             value={note}
             onChange={(e) => setNote(e.target.value)}
             placeholder="What's influencing your mood today?"
-            className="w-full resize-none rounded-lg border border-stone-300 bg-white px-4 py-3 text-sm text-stone-800 leading-relaxed shadow-sm transition focus:border-stone-500 focus:outline-none focus:ring-2 focus:ring-stone-200 placeholder:text-stone-300"
+            className="w-full resize-none rounded-xl border border-cream-200 bg-white px-4 py-3 text-sm leading-relaxed text-stone-800 shadow-warm-sm transition placeholder:text-stone-300 focus:border-terracotta-300 focus:outline-none focus:ring-2 focus:ring-terracotta-100"
           />
         </div>
 
         <div className="flex justify-end">
           <button
             type="submit"
-            className="rounded-lg bg-stone-800 px-6 py-2 text-sm font-medium text-white transition hover:bg-stone-700 active:bg-stone-900"
+            className="rounded-xl bg-terracotta-500 px-6 py-2 text-sm font-medium text-white shadow-warm-sm transition-all duration-150 hover:-translate-y-px hover:bg-terracotta-600 hover:shadow-warm active:translate-y-0"
           >
             {isEdit ? "Update" : "Save mood"}
           </button>

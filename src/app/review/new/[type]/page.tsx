@@ -66,7 +66,7 @@ export default async function NewReviewPage({ params }: Props) {
         <p className="mt-0.5 text-sm text-stone-400">{periodLabel}</p>
       </div>
 
-      <div className="rounded-xl border border-stone-200 bg-white p-6 shadow-sm">
+      <div className="rounded-2xl border border-cream-200 bg-white p-6 shadow-warm">
         <ReviewForm
           type={type}
           periodKey={periodKey}

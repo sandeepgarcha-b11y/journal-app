@@ -22,7 +22,7 @@ export function GoalForm({ existing }: GoalFormProps) {
       {existing && <input type="hidden" name="id" value={existing.id} />}
 
       {/* Title */}
-      <div className="flex flex-col gap-1.5">
+      <div className="flex flex-col gap-2">
         <label htmlFor="goal-title" className="text-sm font-medium text-stone-700">
           Goal{" "}
           <span className="font-normal text-stone-400">(required)</span>
@@ -34,12 +34,12 @@ export function GoalForm({ existing }: GoalFormProps) {
           required
           defaultValue={existing?.title ?? ""}
           placeholder="What do you want to achieve?"
-          className="rounded-lg border border-stone-300 bg-white px-4 py-2.5 text-sm text-stone-800 shadow-sm transition focus:border-stone-500 focus:outline-none focus:ring-2 focus:ring-stone-200 placeholder:text-stone-300"
+          className="rounded-xl border border-cream-200 bg-white px-4 py-2.5 text-sm text-stone-800 shadow-warm-sm transition placeholder:text-stone-300 focus:border-terracotta-300 focus:outline-none focus:ring-2 focus:ring-terracotta-100"
         />
       </div>
 
       {/* Why */}
-      <div className="flex flex-col gap-1.5">
+      <div className="flex flex-col gap-2">
         <label htmlFor="goal-why" className="text-sm font-medium text-stone-700">
           Why{" "}
           <span className="font-normal text-stone-400">(optional — your motivation)</span>
@@ -50,12 +50,12 @@ export function GoalForm({ existing }: GoalFormProps) {
           rows={3}
           defaultValue={existing?.why ?? ""}
           placeholder="What's driving you to achieve this?"
-          className="w-full resize-none rounded-lg border border-stone-300 bg-white px-4 py-2.5 text-sm text-stone-800 leading-relaxed shadow-sm transition focus:border-stone-500 focus:outline-none focus:ring-2 focus:ring-stone-200 placeholder:text-stone-300"
+          className="w-full resize-none rounded-xl border border-cream-200 bg-white px-4 py-2.5 text-sm leading-relaxed text-stone-800 shadow-warm-sm transition placeholder:text-stone-300 focus:border-terracotta-300 focus:outline-none focus:ring-2 focus:ring-terracotta-100"
         />
       </div>
 
       {/* Target date */}
-      <div className="flex flex-col gap-1.5">
+      <div className="flex flex-col gap-2">
         <label htmlFor="goal-targetDate" className="text-sm font-medium text-stone-700">
           Target date{" "}
           <span className="font-normal text-stone-400">(optional)</span>
@@ -65,14 +65,14 @@ export function GoalForm({ existing }: GoalFormProps) {
           type="date"
           name="targetDate"
           defaultValue={targetDateValue}
-          className="rounded-lg border border-stone-300 bg-white px-4 py-2.5 text-sm text-stone-800 shadow-sm transition focus:border-stone-500 focus:outline-none focus:ring-2 focus:ring-stone-200"
+          className="rounded-xl border border-cream-200 bg-white px-4 py-2.5 text-sm text-stone-800 shadow-warm-sm transition focus:border-terracotta-300 focus:outline-none focus:ring-2 focus:ring-terracotta-100"
         />
       </div>
 
       <div className="flex justify-end pt-2">
         <button
           type="submit"
-          className="rounded-lg bg-stone-800 px-6 py-2 text-sm font-medium text-white transition hover:bg-stone-700 active:bg-stone-900"
+          className="rounded-xl bg-terracotta-500 px-6 py-2 text-sm font-medium text-white shadow-warm-sm transition-all duration-150 hover:-translate-y-px hover:bg-terracotta-600 hover:shadow-warm active:translate-y-0"
         >
           {existing ? "Save changes" : "Create goal"}
         </button>

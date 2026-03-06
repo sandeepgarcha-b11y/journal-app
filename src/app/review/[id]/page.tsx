@@ -8,9 +8,9 @@ interface Props {
 }
 
 const TYPE_BADGE: Record<string, string> = {
-  WEEKLY: "bg-blue-100 text-blue-700",
-  MONTHLY: "bg-violet-100 text-violet-700",
-  YEARLY: "bg-amber-100 text-amber-700",
+  WEEKLY:  "bg-terracotta-50 text-terracotta-600",
+  MONTHLY: "bg-sage-50 text-sage-600",
+  YEARLY:  "bg-amber-50 text-amber-700",
 };
 
 export async function generateMetadata({ params }: Props) {
@@ -26,10 +26,10 @@ export default async function ReviewDetailPage({ params }: Props) {
   const review = await getReviewById(id);
   if (!review) notFound();
 
-  const label = formatPeriodLabel(review.type as ReviewType, review.periodKey);
+  const label     = formatPeriodLabel(review.type as ReviewType, review.periodKey);
   const typeLabel = review.type.charAt(0) + review.type.slice(1).toLowerCase();
-  const typeSlug = review.type.toLowerCase();
-  const badgeClass = TYPE_BADGE[review.type] ?? "bg-stone-100 text-stone-600";
+  const typeSlug  = review.type.toLowerCase();
+  const badgeClass = TYPE_BADGE[review.type] ?? "bg-cream-100 text-stone-600";
 
   const sections: Array<{ prompt: string; answer: string }> = (() => {
     try {
@@ -40,12 +40,12 @@ export default async function ReviewDetailPage({ params }: Props) {
   })();
 
   return (
-    <div>
+    <div className="animate-fade-in">
       {/* Header */}
       <div className="mb-6">
         <Link
           href="/review"
-          className="mb-3 inline-flex items-center gap-1 text-sm text-stone-400 transition hover:text-stone-600"
+          className="mb-3 inline-flex items-center gap-1.5 text-sm text-stone-400 transition hover:text-terracotta-600"
         >
           ← Back to reviews
         </Link>
@@ -76,9 +76,12 @@ export default async function ReviewDetailPage({ params }: Props) {
       </div>
 
       {/* Sections */}
-      <div className="flex flex-col gap-6 rounded-xl border border-stone-200 bg-white p-6 shadow-sm">
+      <div className="flex flex-col gap-6 rounded-2xl border border-cream-200 bg-white p-6 shadow-warm">
         {sections.map((section, i) => (
-          <div key={i} className={i > 0 ? "border-t border-stone-100 pt-5" : undefined}>
+          <div
+            key={i}
+            className={i > 0 ? "border-t border-cream-100 pt-5" : undefined}
+          >
             <p className="mb-1.5 text-xs font-semibold uppercase tracking-wide text-stone-400">
               {i + 1}. {section.prompt}
             </p>
@@ -87,7 +90,7 @@ export default async function ReviewDetailPage({ params }: Props) {
                 {section.answer}
               </p>
             ) : (
-              <p className="text-sm italic text-stone-400">No answer provided.</p>
+              <p className="text-sm italic text-stone-300">No answer provided.</p>
             )}
           </div>
         ))}
@@ -97,7 +100,7 @@ export default async function ReviewDetailPage({ params }: Props) {
       <div className="mt-6">
         <Link
           href={`/review/new/${typeSlug}`}
-          className="inline-flex items-center gap-1 text-sm font-medium text-stone-500 transition hover:text-stone-900"
+          className="inline-flex items-center gap-1 text-sm font-medium text-stone-500 transition hover:text-terracotta-600"
         >
           Edit this review →
         </Link>

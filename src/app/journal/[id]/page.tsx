@@ -28,28 +28,28 @@ export default async function EntryPage({ params }: Props) {
   })();
 
   return (
-    <div>
+    <div className="animate-fade-in">
       {/* Back link */}
       <Link
         href="/journal"
-        className="mb-4 inline-flex items-center gap-1 text-sm text-stone-400 transition hover:text-stone-600"
+        className="mb-4 inline-flex items-center gap-1.5 text-sm text-stone-400 transition hover:text-terracotta-600"
       >
         ← Back to journal
       </Link>
 
       {/* Entry card */}
-      <div className="rounded-xl border border-stone-200 bg-white p-6 shadow-sm">
-        <p className="mb-1 text-xs font-medium tracking-wide text-stone-400 uppercase">
+      <div className="rounded-2xl border border-cream-200 bg-white p-6 shadow-warm">
+        <p className="mb-1 text-xs font-medium uppercase tracking-wide text-terracotta-500">
           {formatEntryDate(entry.date)}
         </p>
 
         {prompt && (
-          <p className="mb-4 text-base font-medium text-stone-700 border-b border-stone-100 pb-4">
+          <p className="mb-4 border-b border-cream-100 pb-4 text-base font-medium text-stone-700">
             {prompt}
           </p>
         )}
 
-        <p className="whitespace-pre-wrap text-stone-800 leading-relaxed">
+        <p className="whitespace-pre-wrap leading-relaxed text-stone-800">
           {entry.content}
         </p>
       </div>

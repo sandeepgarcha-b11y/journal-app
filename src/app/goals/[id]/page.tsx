@@ -11,9 +11,9 @@ interface Props {
 }
 
 const STATUS_BADGE: Record<string, string> = {
-  ACTIVE: "bg-emerald-100 text-emerald-700",
-  PAUSED: "bg-stone-100 text-stone-500",
-  COMPLETED: "bg-blue-100 text-blue-700",
+  ACTIVE:    "bg-sage-50 text-sage-600",
+  PAUSED:    "bg-cream-100 text-stone-500",
+  COMPLETED: "bg-stone-100 text-stone-400",
 };
 
 export async function generateMetadata({ params }: Props) {
@@ -24,11 +24,11 @@ export async function generateMetadata({ params }: Props) {
 }
 
 export default async function GoalDetailPage({ params }: Props) {
-  const { id } = await params;
-  const goal = await getGoalById(id);
+  const { id }  = await params;
+  const goal    = await getGoalById(id);
   if (!goal) notFound();
 
-  const badgeClass = STATUS_BADGE[goal.status] ?? "bg-stone-100 text-stone-500";
+  const badgeClass  = STATUS_BADGE[goal.status] ?? "bg-cream-100 text-stone-500";
   const statusLabel = goal.status.charAt(0) + goal.status.slice(1).toLowerCase();
   const isOverdue =
     goal.targetDate !== null &&
@@ -36,7 +36,7 @@ export default async function GoalDetailPage({ params }: Props) {
     new Date(goal.targetDate) < new Date();
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-6 animate-fade-in">
       {/* Header */}
       <div>
         <Link
@@ -50,9 +50,7 @@ export default async function GoalDetailPage({ params }: Props) {
           <div className="flex-1">
             <div className="flex flex-wrap items-center gap-3">
               <h1 className="text-2xl font-semibold text-stone-900">{goal.title}</h1>
-              <span
-                className={`rounded-full px-2.5 py-0.5 text-xs font-medium ${badgeClass}`}
-              >
+              <span className={`rounded-full px-2.5 py-0.5 text-xs font-medium ${badgeClass}`}>
                 {statusLabel}
               </span>
             </div>
@@ -62,7 +60,7 @@ export default async function GoalDetailPage({ params }: Props) {
             {goal.targetDate && (
               <p
                 className={`mt-1 text-xs ${
-                  isOverdue ? "font-medium text-red-500" : "text-stone-400"
+                  isOverdue ? "font-medium text-terracotta-500" : "text-stone-400"
                 }`}
               >
                 {isOverdue ? "Overdue · " : "Target: "}
@@ -73,7 +71,7 @@ export default async function GoalDetailPage({ params }: Props) {
 
           <Link
             href={`/goals/${id}/edit`}
-            className="shrink-0 rounded-lg border border-stone-300 px-4 py-1.5 text-xs font-medium text-stone-600 transition hover:bg-stone-50"
+            className="shrink-0 rounded-xl border border-cream-200 px-4 py-1.5 text-xs font-medium text-stone-600 transition-all duration-150 hover:-translate-y-px hover:bg-cream-50"
           >
             Edit
           </Link>
@@ -88,20 +86,19 @@ export default async function GoalDetailPage({ params }: Props) {
             <input type="hidden" name="status" value="ACTIVE" />
             <button
               type="submit"
-              className="rounded-lg bg-emerald-100 px-4 py-1.5 text-xs font-medium text-emerald-700 transition hover:bg-emerald-200"
+              className="rounded-lg bg-sage-50 px-4 py-1.5 text-xs font-medium text-sage-600 transition-all duration-150 hover:-translate-y-px hover:bg-sage-100"
             >
               Mark active
             </button>
           </form>
         )}
-        {/* Pause is only meaningful when ACTIVE */}
         {goal.status === "ACTIVE" && (
           <form action={updateGoalStatus}>
             <input type="hidden" name="id" value={goal.id} />
             <input type="hidden" name="status" value="PAUSED" />
             <button
               type="submit"
-              className="rounded-lg bg-stone-100 px-4 py-1.5 text-xs font-medium text-stone-600 transition hover:bg-stone-200"
+              className="rounded-lg bg-cream-100 px-4 py-1.5 text-xs font-medium text-stone-600 transition-all duration-150 hover:-translate-y-px hover:bg-cream-200"
             >
               Pause
             </button>
@@ -113,7 +110,7 @@ export default async function GoalDetailPage({ params }: Props) {
             <input type="hidden" name="status" value="COMPLETED" />
             <button
               type="submit"
-              className="rounded-lg bg-blue-100 px-4 py-1.5 text-xs font-medium text-blue-700 transition hover:bg-blue-200"
+              className="rounded-lg bg-stone-100 px-4 py-1.5 text-xs font-medium text-stone-600 transition-all duration-150 hover:-translate-y-px hover:bg-stone-200"
             >
               Mark complete
             </button>
@@ -123,7 +120,7 @@ export default async function GoalDetailPage({ params }: Props) {
 
       {/* Add check-in — hidden for completed goals */}
       {goal.status !== "COMPLETED" && (
-        <div className="rounded-xl border border-stone-200 bg-white p-6 shadow-sm">
+        <div className="rounded-2xl border border-cream-200 bg-white p-6 shadow-warm-sm">
           <h2 className="mb-4 text-base font-semibold text-stone-800">Add check-in</h2>
           <CheckinForm goalId={goal.id} />
         </div>
@@ -131,7 +128,7 @@ export default async function GoalDetailPage({ params }: Props) {
 
       {/* Check-in history */}
       <div>
-        <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-stone-400">
+        <h2 className="mb-3 text-xs font-semibold uppercase tracking-widest text-stone-400">
           Check-ins ({goal.checkins.length})
         </h2>
         <CheckinList checkins={goal.checkins} />

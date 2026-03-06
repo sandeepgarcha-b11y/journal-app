@@ -39,11 +39,10 @@ export function ReviewForm({
         const savedAnswer = existingSections?.[i]?.answer ?? "";
         return (
           <div key={i} className="flex flex-col gap-2">
-            {/* The server action reconstructs sections from prompt_N/answer_N pairs */}
             <input type="hidden" name={`prompt_${i}`} value={prompt} />
             <label
               htmlFor={`answer_${i}`}
-              className="text-sm font-semibold text-stone-800 leading-snug"
+              className="text-sm font-semibold leading-snug text-stone-800"
             >
               {i + 1}. {prompt}
             </label>
@@ -53,7 +52,7 @@ export function ReviewForm({
               rows={4}
               defaultValue={savedAnswer}
               placeholder="Write your reflection here…"
-              className="w-full resize-none rounded-lg border border-stone-300 bg-white px-4 py-3 text-sm text-stone-800 leading-relaxed shadow-sm transition focus:border-stone-500 focus:outline-none focus:ring-2 focus:ring-stone-200 placeholder:text-stone-300"
+              className="w-full resize-none rounded-xl border border-cream-200 bg-white px-4 py-3 text-sm leading-relaxed text-stone-800 shadow-warm-sm transition placeholder:text-stone-300 focus:border-terracotta-300 focus:outline-none focus:ring-2 focus:ring-terracotta-100"
             />
           </div>
         );
@@ -61,13 +60,12 @@ export function ReviewForm({
 
       {/* Weekly review: active goals reference panel */}
       {type === "WEEKLY" && activeGoals && activeGoals.length > 0 && (
-        <div className="rounded-lg border border-stone-200 bg-stone-50 p-4">
+        <div className="rounded-xl border border-cream-200 bg-cream-50 p-4">
           <p className="mb-0.5 text-sm font-semibold text-stone-700">
             Active goals
           </p>
           <p className="mb-3 text-xs text-stone-400">
-            How did each goal go this week? Add a check-in after saving your
-            review.
+            How did each goal go this week? Add a check-in after saving your review.
           </p>
           <div className="flex flex-col gap-2">
             {activeGoals.map((goal) => (
@@ -90,13 +88,13 @@ export function ReviewForm({
         </div>
       )}
 
-      <div className="flex items-center justify-between border-t border-stone-100 pt-4">
+      <div className="flex items-center justify-between border-t border-cream-200 pt-4">
         <p className="text-xs text-stone-400">
           You can save a partial draft and come back later.
         </p>
         <button
           type="submit"
-          className="rounded-lg bg-stone-800 px-6 py-2 text-sm font-medium text-white transition hover:bg-stone-700 active:bg-stone-900"
+          className="rounded-xl bg-terracotta-500 px-6 py-2 text-sm font-medium text-white shadow-warm-sm transition-all duration-150 hover:-translate-y-px hover:bg-terracotta-600 hover:shadow-warm active:translate-y-0"
         >
           Save review
         </button>

@@ -7,15 +7,15 @@ interface ReviewCardProps {
 }
 
 const TYPE_BADGE: Record<string, { label: string; className: string }> = {
-  WEEKLY: { label: "Weekly", className: "bg-blue-100 text-blue-700" },
-  MONTHLY: { label: "Monthly", className: "bg-violet-100 text-violet-700" },
-  YEARLY: { label: "Yearly", className: "bg-amber-100 text-amber-700" },
+  WEEKLY:  { label: "Weekly",  className: "bg-terracotta-50 text-terracotta-600" },
+  MONTHLY: { label: "Monthly", className: "bg-sage-50 text-sage-600"             },
+  YEARLY:  { label: "Yearly",  className: "bg-amber-50 text-amber-700"           },
 };
 
 export function ReviewCard({ review }: ReviewCardProps) {
   const badge = TYPE_BADGE[review.type] ?? {
-    label: review.type,
-    className: "bg-stone-100 text-stone-600",
+    label:     review.type,
+    className: "bg-cream-100 text-stone-600",
   };
 
   const periodLabel = formatPeriodLabel(
@@ -38,7 +38,7 @@ export function ReviewCard({ review }: ReviewCardProps) {
   return (
     <Link
       href={`/review/${review.id}`}
-      className="flex items-start gap-4 rounded-xl border border-stone-200 bg-white p-4 shadow-sm transition hover:bg-stone-50"
+      className="flex items-start gap-4 rounded-2xl border border-cream-200 bg-white p-4 shadow-warm-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-warm"
     >
       <span
         className={`mt-0.5 shrink-0 rounded-full px-2.5 py-0.5 text-xs font-medium ${badge.className}`}

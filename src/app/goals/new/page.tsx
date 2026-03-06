@@ -19,7 +19,7 @@ export default function NewGoalPage() {
         </p>
       </div>
 
-      <div className="rounded-xl border border-stone-200 bg-white p-6 shadow-sm">
+      <div className="rounded-2xl border border-cream-200 bg-white p-6 shadow-warm">
         <GoalForm />
       </div>
     </div>

@@ -7,17 +7,17 @@ import { formatShortDate } from "@/lib/utils/dates";
 // ── SVG coordinate system ──────────────────────────────────────────────────
 const VW = 560;
 const VH = 160;
-const P = { top: 10, right: 10, bottom: 28, left: 28 };
-const IW = VW - P.left - P.right; // inner width
-const IH = VH - P.top - P.bottom; // inner height
+const P  = { top: 10, right: 10, bottom: 28, left: 28 };
+const IW = VW - P.left - P.right;
+const IH = VH - P.top  - P.bottom;
 
 const GRIDLINES = [2, 4, 6, 8, 10] as const;
 
 const TIMEFRAMES = [
-  { label: "7d", days: 7 },
-  { label: "30d", days: 30 },
-  { label: "90d", days: 90 },
-  { label: "1y", days: 365 },
+  { label: "7d",  days: 7   },
+  { label: "30d", days: 30  },
+  { label: "90d", days: 90  },
+  { label: "1y",  days: 365 },
 ] as const;
 
 // Score → y position (1 = bottom, 10 = top)
@@ -25,12 +25,26 @@ function toY(score: number): number {
   return P.top + IH * (1 - (score - 1) / 9);
 }
 
-// Score → colour
+// Warm score palette
 function scoreColor(s: number): string {
-  if (s >= 8) return "#16a34a"; // green-600
-  if (s >= 6) return "#ca8a04"; // yellow-600
-  if (s >= 4) return "#d97706"; // amber-600
-  return "#dc2626"; // red-600
+  if (s >= 8) return "#5A8C61"; // sage-500
+  if (s >= 6) return "#C7A030"; // warm gold
+  if (s >= 4) return "#C47249"; // terracotta-500
+  return "#C45045";             // warm red
+}
+
+// Smooth cubic bezier path — S-curves through all points
+function smoothPath(pts: Array<{ x: number; y: number }>): string {
+  if (pts.length === 0) return "";
+  if (pts.length === 1) return `M ${pts[0].x},${pts[0].y}`;
+  let d = `M ${pts[0].x},${pts[0].y}`;
+  for (let i = 1; i < pts.length; i++) {
+    const p0 = pts[i - 1];
+    const p1 = pts[i];
+    const cpx = (p0.x + p1.x) / 2;
+    d += ` C ${cpx},${p0.y} ${cpx},${p1.y} ${p1.x},${p1.y}`;
+  }
+  return d;
 }
 
 interface Props {
@@ -39,7 +53,7 @@ interface Props {
 }
 
 export function MoodChart({ logs }: Props) {
-  const [days, setDays] = useState(30);
+  const [days, setDays]           = useState(30);
   const [hoveredId, setHoveredId] = useState<string | null>(null);
 
   // ── Filter to selected window ──────────────────────────────────────────
@@ -52,11 +66,11 @@ export function MoodChart({ logs }: Props) {
   const stats = useMemo(() => {
     if (!filtered.length) return null;
     const scores = filtered.map((l) => l.score);
-    const sum = scores.reduce((a, b) => a + b, 0);
+    const sum    = scores.reduce((a, b) => a + b, 0);
     return {
-      avg: (sum / scores.length).toFixed(1),
-      high: Math.max(...scores),
-      low: Math.min(...scores),
+      avg:   (sum / scores.length).toFixed(1),
+      high:  Math.max(...scores),
+      low:   Math.min(...scores),
       count: filtered.length,
     };
   }, [filtered]);
@@ -65,20 +79,19 @@ export function MoodChart({ logs }: Props) {
   const chartData = useMemo(() => {
     if (!filtered.length) return null;
 
-    const ts = filtered.map((l) => new Date(l.date).getTime());
-    const minT = Math.min(...ts);
-    const maxT = Math.max(...ts);
-    const rangeT = maxT - minT || 1; // avoid divide-by-zero for single point
+    const ts    = filtered.map((l) => new Date(l.date).getTime());
+    const minT  = Math.min(...ts);
+    const maxT  = Math.max(...ts);
+    const rangeT = maxT - minT || 1;
 
     const toX = (t: number) => P.left + ((t - minT) / rangeT) * IW;
 
     const points = filtered.map((l) => ({
       log: l,
-      x: toX(new Date(l.date).getTime()),
-      y: toY(l.score),
+      x:   toX(new Date(l.date).getTime()),
+      y:   toY(l.score),
     }));
 
-    // Pick ~6 evenly-spaced tick dates (fewer when zoomed into 7d)
     const maxTicks = Math.min(filtered.length, days <= 7 ? filtered.length : 6);
     let tickIndices: number[];
     if (filtered.length <= maxTicks) {
@@ -92,7 +105,7 @@ export function MoodChart({ logs }: Props) {
     }
     const ticks = tickIndices.map((i) => ({
       date: filtered[i].date,
-      x: toX(new Date(filtered[i].date).getTime()),
+      x:    toX(new Date(filtered[i].date).getTime()),
     }));
 
     return { points, ticks };
@@ -102,11 +115,7 @@ export function MoodChart({ logs }: Props) {
   function fmtTick(date: Date | string): string {
     const d = new Date(date);
     return days <= 30
-      ? d.toLocaleDateString("en-GB", {
-          day: "numeric",
-          month: "short",
-          timeZone: "UTC",
-        })
+      ? d.toLocaleDateString("en-GB", { day: "numeric", month: "short", timeZone: "UTC" })
       : d.toLocaleDateString("en-GB", { month: "short", timeZone: "UTC" });
   }
 
@@ -114,9 +123,14 @@ export function MoodChart({ logs }: Props) {
     ? (chartData?.points.find((p) => p.log.id === hoveredId) ?? null)
     : null;
 
+  // Smooth bezier line path
+  const linePath = chartData
+    ? smoothPath(chartData.points.map((p) => ({ x: p.x, y: p.y })))
+    : "";
+
   // ── Render ─────────────────────────────────────────────────────────────
   return (
-    <div className="rounded-xl border border-stone-200 bg-white p-5 shadow-sm">
+    <div className="rounded-2xl border border-cream-200 bg-white p-5 shadow-warm-sm">
       {/* Header + timeframe selector */}
       <div className="mb-4 flex items-center justify-between">
         <h2 className="text-sm font-semibold text-stone-700">Mood trend</h2>
@@ -125,10 +139,10 @@ export function MoodChart({ logs }: Props) {
             <button
               key={d}
               onClick={() => setDays(d)}
-              className={`rounded-md px-2.5 py-1 text-xs font-medium transition ${
+              className={`rounded-lg px-2.5 py-1 text-xs font-medium transition-all duration-150 ${
                 days === d
-                  ? "bg-stone-800 text-white"
-                  : "bg-stone-100 text-stone-500 hover:bg-stone-200"
+                  ? "bg-terracotta-500 text-white shadow-warm-sm"
+                  : "bg-cream-100 text-stone-500 hover:bg-cream-200"
               }`}
             >
               {label}
@@ -139,13 +153,13 @@ export function MoodChart({ logs }: Props) {
 
       {/* Stats row */}
       {stats && (
-        <div className="mb-4 grid grid-cols-4 gap-2 rounded-lg bg-stone-50 px-4 py-3 text-center">
+        <div className="mb-4 grid grid-cols-4 gap-2 rounded-xl bg-cream-50 px-4 py-3 text-center">
           {(
             [
-              { label: "Avg", value: stats.avg, cls: "text-stone-800" },
-              { label: "High", value: stats.high, cls: "text-emerald-600" },
-              { label: "Low", value: stats.low, cls: "text-red-500" },
-              { label: "Logs", value: stats.count, cls: "text-stone-500" },
+              { label: "Avg",  value: stats.avg,   cls: "text-stone-800"      },
+              { label: "High", value: stats.high,  cls: "text-sage-500"       },
+              { label: "Low",  value: stats.low,   cls: "text-terracotta-500" },
+              { label: "Logs", value: stats.count, cls: "text-stone-500"      },
             ] as const
           ).map(({ label, value, cls }) => (
             <div key={label}>
@@ -158,7 +172,7 @@ export function MoodChart({ logs }: Props) {
 
       {/* Chart or empty state */}
       {!chartData ? (
-        <div className="flex h-28 items-center justify-center rounded-lg bg-stone-50">
+        <div className="flex h-28 items-center justify-center rounded-xl bg-cream-50">
           <p className="text-sm text-stone-400">No data for this period.</p>
         </div>
       ) : (
@@ -170,8 +184,14 @@ export function MoodChart({ logs }: Props) {
           aria-label="Mood trend chart"
         >
           <defs>
+            {/* Warm area gradient */}
+            <linearGradient id="mood-area-fill" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%"   stopColor="#C47249" stopOpacity="0.18" />
+              <stop offset="100%" stopColor="#C47249" stopOpacity="0"    />
+            </linearGradient>
+            {/* Tooltip shadow */}
             <filter id="mood-tip-shadow" x="-20%" y="-40%" width="140%" height="180%">
-              <feDropShadow dx="0" dy="1" stdDeviation="3" floodOpacity="0.1" />
+              <feDropShadow dx="0" dy="1" stdDeviation="3" floodOpacity="0.08" />
             </filter>
           </defs>
 
@@ -183,7 +203,7 @@ export function MoodChart({ logs }: Props) {
                 y1={toY(v)}
                 x2={VW - P.right}
                 y2={toY(v)}
-                stroke="#f5f5f4"
+                stroke="#F5EEE0"
                 strokeWidth={1.5}
               />
               <text
@@ -213,15 +233,23 @@ export function MoodChart({ logs }: Props) {
             </text>
           ))}
 
-          {/* Connecting line */}
+          {/* Area fill — only when more than one point */}
           {chartData.points.length > 1 && (
-            <polyline
-              points={chartData.points.map((p) => `${p.x},${p.y}`).join(" ")}
+            <path
+              d={`${linePath} L ${chartData.points.at(-1)!.x},${VH - P.bottom} L ${chartData.points[0].x},${VH - P.bottom} Z`}
+              fill="url(#mood-area-fill)"
+            />
+          )}
+
+          {/* Smooth connecting line */}
+          {chartData.points.length > 1 && (
+            <path
+              d={linePath}
               fill="none"
-              stroke="#e7e5e4"
-              strokeWidth={2}
-              strokeLinejoin="round"
+              stroke="#C47249"
+              strokeWidth={2.5}
               strokeLinecap="round"
+              strokeLinejoin="round"
             />
           )}
 
@@ -235,21 +263,19 @@ export function MoodChart({ logs }: Props) {
               fill={scoreColor(log.score)}
               stroke="white"
               strokeWidth={2}
-              style={{ cursor: "pointer" }}
+              style={{ cursor: "pointer", transition: "r 0.15s ease" }}
               onMouseEnter={() => setHoveredId(log.id)}
             />
           ))}
 
-          {/* Hover tooltip (SVG-native so coords are always accurate) */}
+          {/* Hover tooltip */}
           {hoveredPt &&
             (() => {
               const { log, x, y } = hoveredPt;
               const TW = 108;
               const TH = log.note ? 40 : 26;
-              // Clamp horizontally; flip vertically when close to top
               const tx = Math.max(P.left, Math.min(x - TW / 2, VW - P.right - TW));
               const ty = y > VH / 2 ? y - TH - 10 : y + 10;
-              // Truncate long notes
               const noteSnippet = log.note
                 ? log.note.length > 16
                   ? log.note.slice(0, 16) + "…"
@@ -262,9 +288,9 @@ export function MoodChart({ logs }: Props) {
                     y={ty}
                     width={TW}
                     height={TH}
-                    rx={5}
+                    rx={6}
                     fill="white"
-                    stroke="#e7e5e4"
+                    stroke="#EDE5D8"
                   />
                   <text
                     x={tx + 8}

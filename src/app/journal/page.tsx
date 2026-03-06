@@ -15,7 +15,7 @@ export default async function JournalPage() {
   ]);
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-6 animate-fade-in">
       {/* Daily affirmation */}
       {affirmation && <DailyAffirmationCard affirmation={affirmation} />}
 
@@ -32,7 +32,7 @@ export default async function JournalPage() {
 
         <Link
           href="/journal/new"
-          className="rounded-lg bg-stone-800 px-5 py-2 text-sm font-medium text-white transition hover:bg-stone-700"
+          className="rounded-xl bg-terracotta-500 px-5 py-2 text-sm font-medium text-white shadow-warm-sm transition-all duration-150 hover:-translate-y-px hover:bg-terracotta-600 hover:shadow-warm active:translate-y-0"
         >
           New entry
         </Link>

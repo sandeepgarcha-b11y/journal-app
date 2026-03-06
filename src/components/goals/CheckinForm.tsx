@@ -16,7 +16,7 @@ const CONFIDENCE_LABELS: Record<number, string> = {
 };
 
 export function CheckinForm({ goalId }: CheckinFormProps) {
-  const [note, setNote] = useState("");
+  const [note, setNote]           = useState("");
   const [confidence, setConfidence] = useState<number | null>(null);
 
   async function handleAction(formData: FormData) {
@@ -30,7 +30,7 @@ export function CheckinForm({ goalId }: CheckinFormProps) {
       <input type="hidden" name="goalId" value={goalId} />
 
       {/* Note */}
-      <div className="flex flex-col gap-1.5">
+      <div className="flex flex-col gap-2">
         <label htmlFor="checkin-note" className="text-sm font-medium text-stone-700">
           Progress note
         </label>
@@ -42,12 +42,12 @@ export function CheckinForm({ goalId }: CheckinFormProps) {
           value={note}
           onChange={(e) => setNote(e.target.value)}
           placeholder="How is this goal progressing?"
-          className="w-full resize-none rounded-lg border border-stone-300 bg-white px-4 py-3 text-sm text-stone-800 leading-relaxed shadow-sm transition focus:border-stone-500 focus:outline-none focus:ring-2 focus:ring-stone-200 placeholder:text-stone-300"
+          className="w-full resize-none rounded-xl border border-cream-200 bg-white px-4 py-3 text-sm leading-relaxed text-stone-800 shadow-warm-sm transition placeholder:text-stone-300 focus:border-terracotta-300 focus:outline-none focus:ring-2 focus:ring-terracotta-100"
         />
       </div>
 
       {/* Confidence — 1–5 toggle buttons */}
-      <div className="flex flex-col gap-1.5">
+      <div className="flex flex-col gap-2">
         <p className="text-sm font-medium text-stone-700">
           Confidence{" "}
           <span className="font-normal text-stone-400">(optional · 1–5)</span>
@@ -59,10 +59,10 @@ export function CheckinForm({ goalId }: CheckinFormProps) {
               type="button"
               onClick={() => setConfidence(confidence === n ? null : n)}
               title={CONFIDENCE_LABELS[n]}
-              className={`h-9 w-9 rounded-lg text-sm font-medium transition ${
+              className={`h-9 w-9 rounded-lg text-sm font-medium transition-all duration-150 hover:-translate-y-px ${
                 confidence === n
-                  ? "bg-stone-800 text-white"
-                  : "bg-stone-100 text-stone-500 hover:bg-stone-200"
+                  ? "bg-terracotta-500 text-white shadow-warm-sm"
+                  : "bg-cream-100 text-stone-500 hover:bg-cream-200"
               }`}
             >
               {n}
@@ -74,7 +74,6 @@ export function CheckinForm({ goalId }: CheckinFormProps) {
             </span>
           )}
         </div>
-        {/* Only submit confidence when selected */}
         {confidence !== null && (
           <input type="hidden" name="confidence" value={confidence} />
         )}
@@ -83,7 +82,7 @@ export function CheckinForm({ goalId }: CheckinFormProps) {
       <div className="flex justify-end">
         <button
           type="submit"
-          className="rounded-lg bg-stone-800 px-5 py-2 text-sm font-medium text-white transition hover:bg-stone-700 active:bg-stone-900"
+          className="rounded-xl bg-terracotta-500 px-5 py-2 text-sm font-medium text-white shadow-warm-sm transition-all duration-150 hover:-translate-y-px hover:bg-terracotta-600 hover:shadow-warm active:translate-y-0"
         >
           Add check-in
         </button>

@@ -22,7 +22,7 @@ export function CheckinList({ checkins }: CheckinListProps) {
   }
 
   return (
-    <div className="flex flex-col divide-y divide-stone-100 rounded-xl border border-stone-200 bg-white shadow-sm">
+    <div className="flex flex-col divide-y divide-cream-100 rounded-2xl border border-cream-200 bg-white shadow-warm">
       {checkins.map((checkin) => (
         <div key={checkin.id} className="px-5 py-4">
           <div className="mb-1.5 flex items-center justify-between gap-3">
@@ -32,7 +32,7 @@ export function CheckinList({ checkins }: CheckinListProps) {
               })}
             </p>
             {checkin.confidence !== null && (
-              <span className="rounded-full bg-stone-100 px-2 py-0.5 text-xs font-medium text-stone-600">
+              <span className="rounded-full bg-cream-100 px-2 py-0.5 text-xs font-medium text-stone-500">
                 {checkin.confidence}/5 · {CONFIDENCE_LABEL[checkin.confidence]}
               </span>
             )}

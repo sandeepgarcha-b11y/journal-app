@@ -7,13 +7,13 @@ interface GoalCardProps {
 }
 
 const STATUS_BADGE: Record<string, string> = {
-  ACTIVE: "bg-emerald-100 text-emerald-700",
-  PAUSED: "bg-stone-100 text-stone-500",
-  COMPLETED: "bg-blue-100 text-blue-700",
+  ACTIVE:    "bg-sage-50 text-sage-600",
+  PAUSED:    "bg-cream-100 text-stone-500",
+  COMPLETED: "bg-stone-100 text-stone-400",
 };
 
 export function GoalCard({ goal }: GoalCardProps) {
-  const badgeClass = STATUS_BADGE[goal.status] ?? "bg-stone-100 text-stone-500";
+  const badgeClass  = STATUS_BADGE[goal.status] ?? "bg-cream-100 text-stone-500";
   const statusLabel = goal.status.charAt(0) + goal.status.slice(1).toLowerCase();
 
   const isOverdue =
@@ -24,10 +24,10 @@ export function GoalCard({ goal }: GoalCardProps) {
   return (
     <Link
       href={`/goals/${goal.id}`}
-      className="flex flex-col gap-2 rounded-xl border border-stone-200 bg-white p-4 shadow-sm transition hover:bg-stone-50"
+      className="flex flex-col gap-2 rounded-2xl border border-cream-200 bg-white p-5 shadow-warm-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-warm"
     >
       <div className="flex items-start justify-between gap-3">
-        <p className="text-sm font-semibold text-stone-800 leading-snug">
+        <p className="text-sm font-semibold leading-snug text-stone-800">
           {goal.title}
         </p>
         <span
@@ -46,7 +46,7 @@ export function GoalCard({ goal }: GoalCardProps) {
       {goal.targetDate && (
         <p
           className={`text-xs ${
-            isOverdue ? "font-medium text-red-500" : "text-stone-400"
+            isOverdue ? "font-medium text-terracotta-500" : "text-stone-400"
           }`}
         >
           {isOverdue ? "Overdue · " : "Target: "}

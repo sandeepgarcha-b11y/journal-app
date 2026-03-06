@@ -15,18 +15,18 @@ export function Nav() {
   const pathname = usePathname();
 
   return (
-    <header className="sticky top-0 z-10 border-b border-stone-200 bg-white/90 backdrop-blur-sm">
+    <header className="sticky top-0 z-10 border-b border-cream-200 bg-cream-50/95 backdrop-blur-sm">
       <div className="mx-auto flex max-w-3xl items-center justify-between px-4 py-3">
         {/* Brand */}
         <Link
           href="/journal"
-          className="text-base font-semibold tracking-tight text-stone-800"
+          className="text-base font-semibold tracking-tight text-stone-800 transition-opacity hover:opacity-70"
         >
           Journal
         </Link>
 
         {/* Nav links */}
-        <nav className="flex items-center gap-1">
+        <nav className="flex items-center gap-0.5">
           {NAV_LINKS.map(({ href, label }) => {
             const isActive =
               pathname === href || pathname.startsWith(href + "/");
@@ -34,10 +34,10 @@ export function Nav() {
               <Link
                 key={href}
                 href={href}
-                className={`rounded-lg px-3 py-1.5 text-sm font-medium transition ${
+                className={`rounded-lg px-3 py-1.5 text-sm font-medium transition-all duration-150 ${
                   isActive
-                    ? "bg-stone-100 text-stone-900"
-                    : "text-stone-500 hover:bg-stone-50 hover:text-stone-800"
+                    ? "bg-cream-100 text-stone-900"
+                    : "text-stone-500 hover:bg-cream-100 hover:text-stone-800"
                 }`}
               >
                 {label}
@@ -48,7 +48,7 @@ export function Nav() {
           {/* Primary CTA */}
           <Link
             href="/journal/new"
-            className="ml-2 rounded-lg bg-stone-800 px-4 py-1.5 text-sm font-medium text-white transition hover:bg-stone-700"
+            className="ml-2 rounded-lg bg-terracotta-500 px-4 py-1.5 text-sm font-medium text-white shadow-warm-sm transition-all duration-150 hover:-translate-y-px hover:bg-terracotta-600 hover:shadow-warm active:translate-y-0"
           >
             New entry
           </Link>

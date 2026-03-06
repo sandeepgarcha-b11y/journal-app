@@ -15,7 +15,7 @@ export default async function MoodPage() {
   ]);
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-6 animate-fade-in">
       {/* Page header */}
       <div>
         <h1 className="text-2xl font-semibold text-stone-900">Mood</h1>
@@ -34,7 +34,7 @@ export default async function MoodPage() {
 
       {/* History */}
       <div>
-        <h2 className="mb-3 text-sm font-semibold text-stone-500 uppercase tracking-wide">
+        <h2 className="mb-3 text-xs font-semibold uppercase tracking-widest text-stone-400">
           Recent logs
         </h2>
         <MoodHistoryList logs={logs} />
