@@ -1,18 +1,26 @@
 import Link from "next/link";
 import { getEntries } from "@/lib/queries/entries";
+import { getDailyAffirmation } from "@/lib/queries/affirmations";
 import { EntryList } from "@/components/journal/EntryList";
+import { DailyAffirmationCard } from "@/components/affirmations/DailyAffirmationCard";
 
 export const metadata = {
   title: "Journal — All Entries",
 };
 
 export default async function JournalPage() {
-  const entries = await getEntries();
+  const [entries, affirmation] = await Promise.all([
+    getEntries(),
+    getDailyAffirmation(),
+  ]);
 
   return (
-    <div>
+    <div className="flex flex-col gap-6">
+      {/* Daily affirmation */}
+      {affirmation && <DailyAffirmationCard affirmation={affirmation} />}
+
       {/* Page header */}
-      <div className="mb-6 flex items-center justify-between">
+      <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-semibold text-stone-900">Journal</h1>
           <p className="mt-0.5 text-sm text-stone-400">

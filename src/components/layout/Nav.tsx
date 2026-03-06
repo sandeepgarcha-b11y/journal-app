@@ -8,6 +8,7 @@ const NAV_LINKS = [
   { href: "/mood", label: "Mood" },
   { href: "/review", label: "Reviews" },
   { href: "/goals", label: "Goals" },
+  { href: "/affirmations", label: "Affirmations" },
 ];
 
 export function Nav() {

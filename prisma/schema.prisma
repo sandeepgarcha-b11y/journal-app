@@ -68,3 +68,13 @@ model GoalCheckin {
 
   @@index([goalId])
 }
+
+model Affirmation {
+  id          String   @id @default(cuid())
+  text        String   @unique
+  isFavourite Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([isFavourite])
+}
