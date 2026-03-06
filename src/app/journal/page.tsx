@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { getEntries } from "@/lib/queries/entries";
 import { getDailyAffirmation } from "@/lib/queries/affirmations";
-import { EntryList } from "@/components/journal/EntryList";
+import { JournalSearch } from "@/components/journal/JournalSearch";
 import { DailyAffirmationCard } from "@/components/affirmations/DailyAffirmationCard";
 
 export const metadata = {
@@ -38,8 +38,8 @@ export default async function JournalPage() {
         </Link>
       </div>
 
-      {/* Entry list */}
-      <EntryList entries={entries} />
+      {/* Searchable entry list */}
+      <JournalSearch entries={entries} />
     </div>
   );
 }

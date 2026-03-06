@@ -1,15 +1,17 @@
-import { getTodayMoodLog, getRecentMoodLogs } from "@/lib/queries/mood";
+import { getTodayMoodLog, getRecentMoodLogs, getMoodLogsForChart } from "@/lib/queries/mood";
 import { MoodForm } from "@/components/mood/MoodForm";
 import { MoodHistoryList } from "@/components/mood/MoodHistoryList";
+import { MoodChart } from "@/components/mood/MoodChart";
 
 export const metadata = {
   title: "Journal — Mood",
 };
 
 export default async function MoodPage() {
-  const [todayLog, logs] = await Promise.all([
+  const [todayLog, logs, chartLogs] = await Promise.all([
     getTodayMoodLog(),
     getRecentMoodLogs(),
+    getMoodLogsForChart(),
   ]);
 
   return (
@@ -26,6 +28,9 @@ export default async function MoodPage() {
 
       {/* Log / edit form */}
       <MoodForm existing={todayLog} />
+
+      {/* Trend chart */}
+      <MoodChart logs={chartLogs} />
 
       {/* History */}
       <div>
