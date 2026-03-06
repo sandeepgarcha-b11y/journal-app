@@ -44,3 +44,27 @@ model Review {
   @@unique([type, periodKey]) // one review per period
   @@index([type, periodKey])
 }
+
+model Goal {
+  id         String        @id @default(cuid())
+  title      String
+  why        String? // motivation / context
+  targetDate DateTime? // UTC midnight, optional
+  status     String        @default("ACTIVE") // "ACTIVE" | "PAUSED" | "COMPLETED"
+  createdAt  DateTime      @default(now())
+  updatedAt  DateTime      @updatedAt
+  checkins   GoalCheckin[]
+
+  @@index([status])
+}
+
+model GoalCheckin {
+  id         String   @id @default(cuid())
+  goalId     String
+  note       String
+  confidence Int? // 1–5, optional
+  createdAt  DateTime @default(now())
+  goal       Goal     @relation(fields: [goalId], references: [id], onDelete: Cascade)
+
+  @@index([goalId])
+}

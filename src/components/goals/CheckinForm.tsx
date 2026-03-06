@@ -1,0 +1,93 @@
+"use client";
+
+import { useState } from "react";
+import { addCheckin } from "@/lib/actions/goals";
+
+interface CheckinFormProps {
+  goalId: string;
+}
+
+const CONFIDENCE_LABELS: Record<number, string> = {
+  1: "Low",
+  2: "Below avg",
+  3: "Okay",
+  4: "Good",
+  5: "High",
+};
+
+export function CheckinForm({ goalId }: CheckinFormProps) {
+  const [note, setNote] = useState("");
+  const [confidence, setConfidence] = useState<number | null>(null);
+
+  async function handleAction(formData: FormData) {
+    await addCheckin(formData);
+    setNote("");
+    setConfidence(null);
+  }
+
+  return (
+    <form action={handleAction} className="flex flex-col gap-4">
+      <input type="hidden" name="goalId" value={goalId} />
+
+      {/* Note */}
+      <div className="flex flex-col gap-1.5">
+        <label htmlFor="checkin-note" className="text-sm font-medium text-stone-700">
+          Progress note
+        </label>
+        <textarea
+          id="checkin-note"
+          name="note"
+          rows={3}
+          required
+          value={note}
+          onChange={(e) => setNote(e.target.value)}
+          placeholder="How is this goal progressing?"
+          className="w-full resize-none rounded-lg border border-stone-300 bg-white px-4 py-3 text-sm text-stone-800 leading-relaxed shadow-sm transition focus:border-stone-500 focus:outline-none focus:ring-2 focus:ring-stone-200 placeholder:text-stone-300"
+        />
+      </div>
+
+      {/* Confidence — 1–5 toggle buttons */}
+      <div className="flex flex-col gap-1.5">
+        <p className="text-sm font-medium text-stone-700">
+          Confidence{" "}
+          <span className="font-normal text-stone-400">(optional · 1–5)</span>
+        </p>
+        <div className="flex gap-2">
+          {([1, 2, 3, 4, 5] as const).map((n) => (
+            <button
+              key={n}
+              type="button"
+              onClick={() => setConfidence(confidence === n ? null : n)}
+              title={CONFIDENCE_LABELS[n]}
+              className={`h-9 w-9 rounded-lg text-sm font-medium transition ${
+                confidence === n
+                  ? "bg-stone-800 text-white"
+                  : "bg-stone-100 text-stone-500 hover:bg-stone-200"
+              }`}
+            >
+              {n}
+            </button>
+          ))}
+          {confidence !== null && (
+            <span className="self-center text-xs text-stone-400">
+              — {CONFIDENCE_LABELS[confidence]}
+            </span>
+          )}
+        </div>
+        {/* Only submit confidence when selected */}
+        {confidence !== null && (
+          <input type="hidden" name="confidence" value={confidence} />
+        )}
+      </div>
+
+      <div className="flex justify-end">
+        <button
+          type="submit"
+          className="rounded-lg bg-stone-800 px-5 py-2 text-sm font-medium text-white transition hover:bg-stone-700 active:bg-stone-900"
+        >
+          Add check-in
+        </button>
+      </div>
+    </form>
+  );
+}

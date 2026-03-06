@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ReviewForm } from "@/components/review/ReviewForm";
 import { getReviewByPeriod } from "@/lib/queries/reviews";
+import { getActiveGoals } from "@/lib/queries/goals";
 import {
   getPeriodKey,
   formatPeriodLabel,
@@ -43,6 +44,12 @@ export default async function NewReviewPage({ params }: Props) {
     ? (JSON.parse(existing.sections) as Array<{ prompt: string; answer: string }>)
     : null;
 
+  // For weekly reviews, surface active goals as a reference panel
+  const activeGoals =
+    type === "WEEKLY"
+      ? (await getActiveGoals()).map((g) => ({ id: g.id, title: g.title }))
+      : null;
+
   return (
     <div>
       {/* Header */}
@@ -65,6 +72,7 @@ export default async function NewReviewPage({ params }: Props) {
           periodKey={periodKey}
           prompts={REVIEW_PROMPTS[type]}
           existingSections={existingSections}
+          activeGoals={activeGoals ?? undefined}
         />
       </div>
     </div>

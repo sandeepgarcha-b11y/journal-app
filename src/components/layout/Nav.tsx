@@ -7,6 +7,7 @@ const NAV_LINKS = [
   { href: "/journal", label: "Journal" },
   { href: "/mood", label: "Mood" },
   { href: "/review", label: "Reviews" },
+  { href: "/goals", label: "Goals" },
 ];
 
 export function Nav() {

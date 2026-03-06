@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { saveReview } from "@/lib/actions/reviews";
 
 interface Section {
@@ -7,11 +8,18 @@ interface Section {
   answer: string;
 }
 
+interface ActiveGoal {
+  id: string;
+  title: string;
+}
+
 interface ReviewFormProps {
   type: string; // "WEEKLY" | "MONTHLY" | "YEARLY"
   periodKey: string;
   prompts: string[];
   existingSections?: Section[] | null;
+  /** Passed only for weekly reviews — shows active goals as a reference panel. */
+  activeGoals?: ActiveGoal[];
 }
 
 export function ReviewForm({
@@ -19,6 +27,7 @@ export function ReviewForm({
   periodKey,
   prompts,
   existingSections,
+  activeGoals,
 }: ReviewFormProps) {
   return (
     <form action={saveReview} className="flex flex-col gap-8">
@@ -49,6 +58,37 @@ export function ReviewForm({
           </div>
         );
       })}
+
+      {/* Weekly review: active goals reference panel */}
+      {type === "WEEKLY" && activeGoals && activeGoals.length > 0 && (
+        <div className="rounded-lg border border-stone-200 bg-stone-50 p-4">
+          <p className="mb-0.5 text-sm font-semibold text-stone-700">
+            Active goals
+          </p>
+          <p className="mb-3 text-xs text-stone-400">
+            How did each goal go this week? Add a check-in after saving your
+            review.
+          </p>
+          <div className="flex flex-col gap-2">
+            {activeGoals.map((goal) => (
+              <div
+                key={goal.id}
+                className="flex items-center justify-between gap-3"
+              >
+                <p className="text-sm text-stone-600">{goal.title}</p>
+                <Link
+                  href={`/goals/${goal.id}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="shrink-0 text-xs font-medium text-stone-500 underline decoration-stone-300 transition hover:text-stone-900"
+                >
+                  Add check-in ↗
+                </Link>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       <div className="flex items-center justify-between border-t border-stone-100 pt-4">
         <p className="text-xs text-stone-400">
