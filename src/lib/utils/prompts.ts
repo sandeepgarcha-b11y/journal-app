@@ -1,0 +1,17 @@
+export const DAILY_PROMPTS: string[] = [
+  "What is one thing I am grateful for today?",
+  "What is the most important thing I need to accomplish today?",
+  "How am I feeling right now, and why?",
+  "What is one challenge I am facing, and how might I approach it?",
+  "What did I learn yesterday that I can build on today?",
+  "What would make today a great day?",
+  "Who did I connect with recently, and how did it impact me?",
+  "What is one small act of kindness I can do today?",
+  "What has been occupying my mind lately?",
+  "What am I looking forward to, near or far?",
+  "What is something I want to stop, start, or continue doing?",
+  "Describe a moment recently when I felt fully present.",
+  "What is one thing I could do differently to improve my energy levels?",
+  "What boundaries do I need to set or maintain today?",
+  "If today were my last, what would I want to do or say?",
+];

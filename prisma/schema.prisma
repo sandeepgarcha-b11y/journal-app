@@ -1,0 +1,34 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model Entry {
+  id        String   @id @default(cuid())
+  date      DateTime // UTC midnight of the local calendar day
+  content   String // Free-text body
+  prompts   String? // JSON: [{prompt: string, answer: string}]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([date])
+}
+
+model MoodLog {
+  id        String   @id @default(cuid())
+  date      DateTime // UTC midnight of the local calendar day — unique per day
+  score     Int // 1–10
+  note      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([date])
+  @@index([date])
+}
