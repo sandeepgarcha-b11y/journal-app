@@ -1,5 +1,7 @@
 # Journal App
 
+> 🔗 **[Live demo →](https://your-hosted-url.com)** *(update this link once deployed)*
+
 A clean, minimal, **local-first personal journaling app** built with Next.js, TypeScript, Tailwind CSS, and Prisma + SQLite. No authentication, no cloud — everything lives on your machine.
 
 ---
@@ -39,7 +41,7 @@ A clean, minimal, **local-first personal journaling app** built with Next.js, Ty
 ### Install
 
 ```bash
-git clone https://github.com/sandeepgarcha-a11y/journal-app.git
+git clone <this-repo-url>
 cd journal-app
 npm install
 ```
@@ -100,16 +102,16 @@ src/
     └── utils/              # Date helpers, prompts, review utils
 prisma/
 ├── schema.prisma           # Database models
-└── seed.mjs                # Affirmation seed script
+└── seed.mjs                # Seed script
 ```
 
 ---
 
 ## Design Notes
 
-- **Warm palette** — cream backgrounds, terracotta primary, sage secondary, amber accents, all driven by CSS custom properties in `globals.css`.
-- **Animations** — `animate-fade-in` and `animate-slide-up` keyframes for smooth page transitions; subtle `hover:-translate-y-px` lifts on interactive cards.
-- **Optimistic UI** — Favourite toggles on affirmations update instantly in the client while the server action runs in a `useTransition`.
+- **Warm palette** — cream backgrounds, terracotta primary, sage secondary, all driven by CSS custom properties in `globals.css`.
+- **Animations** — `animate-fade-in` keyframes for smooth page transitions; subtle `hover:-translate-y-px` lifts on interactive cards.
+- **Optimistic UI** — Favourite toggles update instantly in the client while the server action resolves.
 - **Client-side search** — Journal search and filter use `useMemo` for zero-latency filtering without server round-trips.
 - **Deterministic daily affirmation** — Selected by `daysSinceEpoch % totalAffirmations` so it's consistent for the full UTC day.
 - **Idempotent seeding** — `INSERT OR IGNORE` ensures the seed script is safe to re-run.
@@ -125,7 +127,7 @@ prisma/
 | `MoodLog` | `date` (unique, UTC midnight), `score` (1–10), `note` |
 | `Review` | `type`, `periodKey` (e.g. `2026-W10`), `sections` (JSON) — unique per period |
 | `Goal` | `title`, `why`, `targetDate`, `status` (ACTIVE/PAUSED/COMPLETED) |
-| `GoalCheckin` | `goalId`, `note`, `confidence` (1–5), `date` |
+| `GoalCheckin` | `goalId`, `note`, `confidence` (1–5) |
 | `Affirmation` | `text` (unique), `isFavourite` |
 
 ---
@@ -138,5 +140,5 @@ prisma/
 - [x] **M4** — Goals with check-ins; active goals surface in weekly review
 - [x] **M5** — Affirmation library with daily card and favourites
 - [x] **M6A** — Journal search and type filter
-- [x] **M6B** — Mood trend chart (smooth Bézier curve, area fill, hover tooltips)
+- [x] **M6B** — Mood trend chart (smooth line, area fill, hover tooltips)
 - [x] **UI/UX Refactor** — Warm palette, rounded cards, subtle animations throughout
