@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { getReviewById } from "@/lib/queries/reviews";
 import { deleteReview } from "@/lib/actions/reviews";
 import { formatPeriodLabel, type ReviewType } from "@/lib/utils/reviews";
+import { DeleteButton } from "@/components/common/DeleteButton";
 
 interface Props {
   params: Promise<{ id: string }>;
@@ -106,22 +107,12 @@ export default async function ReviewDetailPage({ params }: Props) {
           Edit this review →
         </Link>
 
-        <form
+        <DeleteButton
           action={deleteReview}
-          onSubmit={(e) => {
-            if (!confirm("Delete this review? This cannot be undone.")) {
-              e.preventDefault();
-            }
-          }}
-        >
-          <input type="hidden" name="id" value={review.id} />
-          <button
-            type="submit"
-            className="rounded-lg px-3 py-1.5 text-xs font-medium text-stone-400 transition-all duration-150 hover:bg-terracotta-50 hover:text-terracotta-600"
-          >
-            Delete review
-          </button>
-        </form>
+          id={review.id}
+          label="Delete review"
+          confirmMessage="Delete this review? This cannot be undone."
+        />
       </div>
     </div>
   );

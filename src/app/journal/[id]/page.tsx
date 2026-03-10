@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { getEntryById } from "@/lib/queries/entries";
 import { deleteEntry } from "@/lib/actions/entries";
 import { formatEntryDate } from "@/lib/utils/dates";
+import { DeleteButton } from "@/components/common/DeleteButton";
 
 export const metadata = {
   title: "Journal — Entry",
@@ -74,22 +75,12 @@ export default async function EntryPage({ params }: Props) {
           )}
         </p>
 
-        <form
+        <DeleteButton
           action={deleteEntry}
-          onSubmit={(e) => {
-            if (!confirm("Delete this entry? This cannot be undone.")) {
-              e.preventDefault();
-            }
-          }}
-        >
-          <input type="hidden" name="id" value={entry.id} />
-          <button
-            type="submit"
-            className="rounded-lg px-3 py-1.5 text-xs font-medium text-stone-400 transition-all duration-150 hover:bg-terracotta-50 hover:text-terracotta-600"
-          >
-            Delete entry
-          </button>
-        </form>
+          id={entry.id}
+          label="Delete entry"
+          confirmMessage="Delete this entry? This cannot be undone."
+        />
       </div>
     </div>
   );
