@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { getEntries } from "@/lib/queries/entries";
+import { getEntries, getJournalingStreak } from "@/lib/queries/entries";
 import { getDailyAffirmation } from "@/lib/queries/affirmations";
 import { JournalSearch } from "@/components/journal/JournalSearch";
 import { DailyAffirmationCard } from "@/components/affirmations/DailyAffirmationCard";
@@ -9,9 +9,10 @@ export const metadata = {
 };
 
 export default async function JournalPage() {
-  const [entries, affirmation] = await Promise.all([
+  const [entries, affirmation, streak] = await Promise.all([
     getEntries(),
     getDailyAffirmation(),
+    getJournalingStreak(),
   ]);
 
   return (
@@ -20,19 +21,24 @@ export default async function JournalPage() {
       {affirmation && <DailyAffirmationCard affirmation={affirmation} />}
 
       {/* Page header */}
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-semibold text-stone-900">Journal</h1>
           <p className="mt-0.5 text-sm text-stone-400">
             {entries.length === 0
               ? "Nothing written yet"
               : `${entries.length} ${entries.length === 1 ? "entry" : "entries"}`}
+            {streak >= 2 && (
+              <span className="ml-2 inline-flex items-center gap-1 rounded-full bg-terracotta-50 px-2.5 py-0.5 text-xs font-semibold text-terracotta-600">
+                {streak}-day streak
+              </span>
+            )}
           </p>
         </div>
 
         <Link
           href="/journal/new"
-          className="rounded-xl bg-terracotta-500 px-5 py-2 text-sm font-medium text-white shadow-warm-sm transition-all duration-150 hover:-translate-y-px hover:bg-terracotta-600 hover:shadow-warm active:translate-y-0"
+          className="shrink-0 rounded-xl bg-terracotta-500 px-5 py-2 text-sm font-medium text-white shadow-warm-sm transition-all duration-150 hover:-translate-y-px hover:bg-terracotta-600 hover:shadow-warm active:translate-y-0"
         >
           New entry
         </Link>

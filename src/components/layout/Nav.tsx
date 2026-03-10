@@ -31,7 +31,7 @@ export function Nav() {
       <div className="mx-auto flex max-w-3xl items-center justify-between px-4 py-3">
         {/* Brand */}
         <Link
-          href="/journal"
+          href="/"
           className="text-base font-semibold tracking-tight text-stone-800 transition-opacity hover:opacity-70"
         >
           Journal

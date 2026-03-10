@@ -34,13 +34,13 @@ export async function createEntry(formData: FormData) {
   redirect("/journal");
 }
 
-export async function updateEntry(id: string, formData: FormData) {
+export async function updateEntry(formData: FormData) {
+  const id      = formData.get("id") as string;
   const content = formData.get("content") as string;
-  const prompt = formData.get("prompt") as string;
+  const prompt  = formData.get("prompt") as string;
 
-  if (!content?.trim()) {
-    throw new Error("Entry content cannot be empty.");
-  }
+  if (!id) throw new Error("Entry ID is required.");
+  if (!content?.trim()) throw new Error("Entry content cannot be empty.");
 
   const promptsJson =
     prompt && prompt.trim()
@@ -56,7 +56,7 @@ export async function updateEntry(id: string, formData: FormData) {
   });
 
   revalidatePath("/journal");
-  redirect("/journal");
+  redirect(`/journal/${id}`);
 }
 
 export async function deleteEntry(formData: FormData) {

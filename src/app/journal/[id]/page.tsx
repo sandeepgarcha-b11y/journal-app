@@ -75,12 +75,20 @@ export default async function EntryPage({ params }: Props) {
           )}
         </p>
 
-        <DeleteButton
-          action={deleteEntry}
-          id={entry.id}
-          label="Delete entry"
-          confirmMessage="Delete this entry? This cannot be undone."
-        />
+        <div className="flex items-center gap-2">
+          <Link
+            href={`/journal/${entry.id}/edit`}
+            className="rounded-lg px-3 py-1.5 text-xs font-medium text-stone-400 transition-all duration-150 hover:bg-cream-100 hover:text-stone-700"
+          >
+            Edit entry
+          </Link>
+          <DeleteButton
+            action={deleteEntry}
+            id={entry.id}
+            label="Delete entry"
+            confirmMessage="Delete this entry? This cannot be undone."
+          />
+        </div>
       </div>
     </div>
   );
