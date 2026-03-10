@@ -9,12 +9,13 @@
     "db:migrate": "prisma migrate dev",
     "db:generate": "prisma generate",
     "db:studio": "prisma studio",
-    "db:seed": "node prisma/seed.mjs"
+    "db:seed": "node prisma/seed.mjs",
+    "db:push": "prisma db push"
   },
   "dependencies": {
-    "@prisma/adapter-better-sqlite3": "^7.4.2",
+    "@libsql/client": "^0.15.0",
+    "@prisma/adapter-libsql": "^7.4.2",
     "@prisma/client": "^7.4.2",
-    "better-sqlite3": "^12.6.2",
     "next": "16.1.6",
     "next-auth": "^5.0.0-beta.30",
     "prisma": "^7.4.2",
@@ -23,7 +24,6 @@
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
-    "@types/better-sqlite3": "^7.6.13",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",

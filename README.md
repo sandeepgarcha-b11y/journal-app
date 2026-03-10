@@ -1,8 +1,8 @@
 # Journal App
 
-> 🔗 **[Live demo →](https://your-hosted-url.com)** *(update this link once deployed)*
+> 🔗 **[Live demo →](https://your-hosted-url.com)** *(update this link once deployed to Vercel)*
 
-A clean, minimal, **local-first personal journaling app** built with Next.js, TypeScript, Tailwind CSS, and Prisma + SQLite. No authentication, no cloud — everything lives on your machine.
+A clean, minimal, **personal journaling app** built with Next.js, TypeScript, Tailwind CSS, Prisma, and libsql/Turso. Protected by username + password authentication — only you can log in.
 
 ---
 
@@ -10,11 +10,12 @@ A clean, minimal, **local-first personal journaling app** built with Next.js, Ty
 
 | Section | What you can do |
 |---|---|
-| **Journal** | Write daily entries with guided prompts, search and filter by type (Daily / Weekly / Monthly / Yearly) |
+| **Journal** | Write daily entries with guided prompts, search and filter, edit and delete entries |
 | **Mood** | Log a daily mood score (1–10) with an optional note, view a trend chart and 30-day history |
 | **Reviews** | Structured weekly, monthly, and yearly reflection templates with pre-filled prompts |
-| **Goals** | Create and track goals with status transitions (Active → Paused → Completed) and timestamped check-ins |
-| **Affirmations** | Daily affirmation card on the journal homepage, full library with favourites filter |
+| **Goals** | Create and track goals with status transitions and timestamped check-ins |
+| **Affirmations** | Daily affirmation card on the home dashboard, full library with favourites filter |
+| **Today dashboard** | Greeting, daily affirmation, today's journal/mood/goals status at a glance |
 
 ---
 
@@ -22,47 +23,106 @@ A clean, minimal, **local-first personal journaling app** built with Next.js, Ty
 
 | Layer | Technology |
 |---|---|
-| Framework | [Next.js 16](https://nextjs.org) (App Router) |
+| Framework | Next.js 16 (App Router) |
 | Language | TypeScript |
-| Styling | Tailwind CSS v4 (custom warm palette via CSS variables) |
-| ORM | [Prisma 7](https://prisma.io) |
-| Database | SQLite via `better-sqlite3` |
+| Styling | Tailwind CSS v4 (custom warm palette) |
+| Auth | NextAuth.js v5 (Credentials provider) |
+| ORM | Prisma 7 |
+| Database | libsql — local SQLite file in dev, Turso cloud in production |
 | Runtime | Node.js (no global installs required) |
 
 ---
 
-## Getting Started
+## Local Development
 
 ### Prerequisites
 
-- Node.js ≥ 20 (via [nvm](https://github.com/nvm-sh/nvm) is fine)
+- Node.js >= 20
 - No admin access, Docker, or external database needed
 
-### Install
+### 1. Install dependencies
 
-```bash
+```
 git clone <this-repo-url>
 cd journal-app
 npm install
 ```
 
-### Set up the database
+### 2. Create .env.local
 
-```bash
-# Run migrations (creates journal.db at project root)
-npm run db:migrate
+```
+# .env.local  (never commit this file)
 
-# Seed the affirmations library
+# Auth
+AUTH_SECRET=replace_with_random_hex_secret   # openssl rand -hex 32
+AUTH_USERNAME=yourname
+AUTH_PASSWORD=a_strong_password
+
+# Database (local SQLite file — no token needed)
+TURSO_DATABASE_URL=file:./journal.db
+```
+
+### 3. Set up the database
+
+```
+# Push the Prisma schema to your local SQLite file
+npm run db:push
+
+# Seed with sample entries, moods, goals, and affirmations
 npm run db:seed
 ```
 
-### Run the dev server
+### 4. Start the dev server
 
-```bash
+```
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) — it redirects straight to `/journal`.
+Open http://localhost:3000 and sign in with the credentials you set above.
+
+---
+
+## Deploying to Vercel
+
+### Step 1 — Create a Turso database
+
+1. Sign up at https://turso.tech (free tier is generous).
+2. Create a new database (e.g. "journal-db").
+3. Note your Database URL (libsql://journal-db-org.turso.io) and Auth Token from the dashboard.
+
+### Step 2 — Push the schema to Turso
+
+Run once from your local machine:
+
+```
+TURSO_DATABASE_URL=libsql://journal-db-<org>.turso.io \
+TURSO_AUTH_TOKEN=<your-turso-token> \
+npm run db:push
+```
+
+### Step 3 — Add environment variables in Vercel
+
+In your Vercel project, go to Settings > Environment Variables and add:
+
+| Variable | Value |
+|---|---|
+| TURSO_DATABASE_URL | libsql://journal-db-<org>.turso.io |
+| TURSO_AUTH_TOKEN | your Turso auth token |
+| AUTH_SECRET | random 32-byte hex string |
+| AUTH_USERNAME | your login username |
+| AUTH_PASSWORD | a strong password |
+
+### Step 4 — Deploy
+
+Push to your connected git branch and Vercel builds automatically.
+
+To seed production data, run locally with your Turso credentials:
+
+```
+TURSO_DATABASE_URL=libsql://journal-db-<org>.turso.io \
+TURSO_AUTH_TOKEN=<your-turso-token> \
+npm run db:seed
+```
 
 ---
 
@@ -70,75 +130,19 @@ Open [http://localhost:3000](http://localhost:3000) — it redirects straight to
 
 | Command | Description |
 |---|---|
-| `npm run dev` | Start Next.js dev server |
-| `npm run build` | Production build |
-| `npm run db:migrate` | Run Prisma migrations (creates / updates `journal.db`) |
-| `npm run db:generate` | Regenerate Prisma client after schema changes |
-| `npm run db:seed` | Seed affirmations table (idempotent — safe to re-run) |
-| `npm run db:studio` | Open Prisma Studio GUI |
+| npm run dev | Start Next.js dev server |
+| npm run build | Production build |
+| npm run db:push | Push Prisma schema to database (local or remote) |
+| npm run db:generate | Regenerate Prisma client after schema changes |
+| npm run db:seed | Seed sample data (idempotent) |
+| npm run db:studio | Open Prisma Studio GUI |
 
 ---
 
-## Project Structure
+## Security
 
-```
-src/
-├── app/                    # Next.js App Router pages
-│   ├── journal/            # Daily entries (list, new, detail)
-│   ├── mood/               # Mood tracker
-│   ├── review/             # Weekly / monthly / yearly reviews
-│   ├── goals/              # Goal management
-│   └── affirmations/       # Affirmation library
-├── components/
-│   ├── affirmations/       # DailyAffirmationCard, AffirmationCard
-│   ├── goals/              # GoalCard, GoalForm, CheckinForm, CheckinList
-│   ├── journal/            # EntryCard, EntryForm, JournalSearch
-│   ├── layout/             # Nav
-│   ├── mood/               # MoodForm, MoodHistoryList, MoodChart
-│   └── review/             # ReviewCard, ReviewForm
-└── lib/
-    ├── actions/            # Server actions (entries, mood, reviews, goals, affirmations)
-    ├── queries/            # Data-fetching functions
-    └── utils/              # Date helpers, prompts, review utils
-prisma/
-├── schema.prisma           # Database models
-└── seed.mjs                # Seed script
-```
-
----
-
-## Design Notes
-
-- **Warm palette** — cream backgrounds, terracotta primary, sage secondary, all driven by CSS custom properties in `globals.css`.
-- **Animations** — `animate-fade-in` keyframes for smooth page transitions; subtle `hover:-translate-y-px` lifts on interactive cards.
-- **Optimistic UI** — Favourite toggles update instantly in the client while the server action resolves.
-- **Client-side search** — Journal search and filter use `useMemo` for zero-latency filtering without server round-trips.
-- **Deterministic daily affirmation** — Selected by `daysSinceEpoch % totalAffirmations` so it's consistent for the full UTC day.
-- **Idempotent seeding** — `INSERT OR IGNORE` ensures the seed script is safe to re-run.
-- **No duplicate daily entries** — Mood and review upserts are keyed on `(type, periodKey)` or UTC-midnight date.
-
----
-
-## Database Schema (summary)
-
-| Model | Key fields |
-|---|---|
-| `Entry` | `date`, `content`, `prompts` (JSON), `type` (DAILY/WEEKLY/MONTHLY/YEARLY) |
-| `MoodLog` | `date` (unique, UTC midnight), `score` (1–10), `note` |
-| `Review` | `type`, `periodKey` (e.g. `2026-W10`), `sections` (JSON) — unique per period |
-| `Goal` | `title`, `why`, `targetDate`, `status` (ACTIVE/PAUSED/COMPLETED) |
-| `GoalCheckin` | `goalId`, `note`, `confidence` (1–5) |
-| `Affirmation` | `text` (unique), `isFavourite` |
-
----
-
-## Milestones
-
-- [x] **M1** — Daily journal entries with prompt picker
-- [x] **M2** — Mood tracker with history list
-- [x] **M3** — Weekly / monthly / yearly reviews
-- [x] **M4** — Goals with check-ins; active goals surface in weekly review
-- [x] **M5** — Affirmation library with daily card and favourites
-- [x] **M6A** — Journal search and type filter
-- [x] **M6B** — Mood trend chart (smooth line, area fill, hover tooltips)
-- [x] **UI/UX Refactor** — Warm palette, rounded cards, subtle animations throughout
+- All routes are protected by Next.js middleware — unauthenticated users are redirected to /login.
+- No public signup — credentials live only in environment variables.
+- SQL injection protection — Prisma uses parameterised queries throughout.
+- XSS protection — React auto-escapes all output.
+- CSRF protection — built into Next.js Server Actions.

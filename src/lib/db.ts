@@ -1,5 +1,4 @@
-import path from "path";
-import { PrismaBetterSqlite3 } from "@prisma/adapter-better-sqlite3";
+import { PrismaLibSql } from "@prisma/adapter-libsql";
 import { PrismaClient } from "@/generated/prisma/client";
 
 const globalForPrisma = globalThis as unknown as {
@@ -7,14 +6,19 @@ const globalForPrisma = globalThis as unknown as {
 };
 
 function createPrismaClient(): PrismaClient {
-  // DATABASE_URL=file:./journal.db places the file at project root
-  const dbPath = path.join(process.cwd(), "journal.db");
-  const adapter = new PrismaBetterSqlite3({ url: dbPath });
-  // Prisma 7 constructor types require adapter/accelerateUrl;
-  // the generated files use @ts-nocheck so a cast is needed here.
+  // PrismaLibSql accepts the libsql Config object directly (not a pre-created client).
+  // Local dev:  TURSO_DATABASE_URL=file:./journal.db  (authToken not required)
+  // Production: TURSO_DATABASE_URL=libsql://<db>-<org>.turso.io + TURSO_AUTH_TOKEN=<token>
+  const adapter = new PrismaLibSql({
+    url:       process.env.TURSO_DATABASE_URL!,
+    authToken: process.env.TURSO_AUTH_TOKEN,
+  });
+
+  // Prisma 7 constructor types require an adapter; cast to satisfy the type.
   const Client = PrismaClient as unknown as new (opts: {
-    adapter: PrismaBetterSqlite3;
+    adapter: PrismaLibSql;
   }) => PrismaClient;
+
   return new Client({ adapter });
 }
 
