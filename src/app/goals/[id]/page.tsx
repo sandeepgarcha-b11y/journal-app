@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getGoalById } from "@/lib/queries/goals";
-import { updateGoalStatus } from "@/lib/actions/goals";
+import { updateGoalStatus, deleteGoal } from "@/lib/actions/goals";
 import { CheckinForm } from "@/components/goals/CheckinForm";
 import { CheckinList } from "@/components/goals/CheckinList";
 import { formatShortDate } from "@/lib/utils/dates";
@@ -69,12 +69,30 @@ export default async function GoalDetailPage({ params }: Props) {
             )}
           </div>
 
-          <Link
-            href={`/goals/${id}/edit`}
-            className="shrink-0 rounded-xl border border-cream-200 px-4 py-1.5 text-xs font-medium text-stone-600 transition-all duration-150 hover:-translate-y-px hover:bg-cream-50"
-          >
-            Edit
-          </Link>
+          <div className="flex items-center gap-2">
+            <Link
+              href={`/goals/${id}/edit`}
+              className="shrink-0 rounded-xl border border-cream-200 px-4 py-1.5 text-xs font-medium text-stone-600 transition-all duration-150 hover:-translate-y-px hover:bg-cream-50"
+            >
+              Edit
+            </Link>
+            <form
+              action={deleteGoal}
+              onSubmit={(e) => {
+                if (!confirm("Delete this goal and all its check-ins? This cannot be undone.")) {
+                  e.preventDefault();
+                }
+              }}
+            >
+              <input type="hidden" name="id" value={goal.id} />
+              <button
+                type="submit"
+                className="shrink-0 rounded-xl border border-transparent px-4 py-1.5 text-xs font-medium text-stone-400 transition-all duration-150 hover:bg-terracotta-50 hover:text-terracotta-600"
+              >
+                Delete
+              </button>
+            </form>
+          </div>
         </div>
       </div>
 

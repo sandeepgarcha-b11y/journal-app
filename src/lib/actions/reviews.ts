@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/db";
+import { auth } from "@/auth";
 import type { ReviewType } from "@/lib/utils/reviews";
 
 export async function saveReview(formData: FormData) {
@@ -32,4 +33,17 @@ export async function saveReview(formData: FormData) {
 
   revalidatePath("/review");
   redirect(`/review/${result.id}`);
+}
+
+export async function deleteReview(formData: FormData) {
+  const session = await auth();
+  if (!session) throw new Error("Unauthorised");
+
+  const id = formData.get("id") as string;
+  if (!id) throw new Error("Review ID is required.");
+
+  await prisma.review.delete({ where: { id } });
+
+  revalidatePath("/review");
+  redirect("/review");
 }

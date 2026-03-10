@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getEntryById } from "@/lib/queries/entries";
+import { deleteEntry } from "@/lib/actions/entries";
 import { formatEntryDate } from "@/lib/utils/dates";
 
 export const metadata = {
@@ -54,23 +55,42 @@ export default async function EntryPage({ params }: Props) {
         </p>
       </div>
 
-      {/* Meta */}
-      <p className="mt-4 text-xs text-stone-400">
-        Written{" "}
-        {new Date(entry.createdAt).toLocaleString("en-GB", {
-          dateStyle: "medium",
-          timeStyle: "short",
-        })}
-        {entry.updatedAt > entry.createdAt && (
-          <>
-            {" · Edited "}
-            {new Date(entry.updatedAt).toLocaleString("en-GB", {
-              dateStyle: "medium",
-              timeStyle: "short",
-            })}
-          </>
-        )}
-      </p>
+      {/* Meta + actions */}
+      <div className="mt-4 flex items-center justify-between">
+        <p className="text-xs text-stone-400">
+          Written{" "}
+          {new Date(entry.createdAt).toLocaleString("en-GB", {
+            dateStyle: "medium",
+            timeStyle: "short",
+          })}
+          {entry.updatedAt > entry.createdAt && (
+            <>
+              {" · Edited "}
+              {new Date(entry.updatedAt).toLocaleString("en-GB", {
+                dateStyle: "medium",
+                timeStyle: "short",
+              })}
+            </>
+          )}
+        </p>
+
+        <form
+          action={deleteEntry}
+          onSubmit={(e) => {
+            if (!confirm("Delete this entry? This cannot be undone.")) {
+              e.preventDefault();
+            }
+          }}
+        >
+          <input type="hidden" name="id" value={entry.id} />
+          <button
+            type="submit"
+            className="rounded-lg px-3 py-1.5 text-xs font-medium text-stone-400 transition-all duration-150 hover:bg-terracotta-50 hover:text-terracotta-600"
+          >
+            Delete entry
+          </button>
+        </form>
+      </div>
     </div>
   );
 }

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getReviewById } from "@/lib/queries/reviews";
+import { deleteReview } from "@/lib/actions/reviews";
 import { formatPeriodLabel, type ReviewType } from "@/lib/utils/reviews";
 
 interface Props {
@@ -96,14 +97,31 @@ export default async function ReviewDetailPage({ params }: Props) {
         ))}
       </div>
 
-      {/* Edit link */}
-      <div className="mt-6">
+      {/* Edit link + delete */}
+      <div className="mt-6 flex items-center justify-between">
         <Link
           href={`/review/new/${typeSlug}`}
           className="inline-flex items-center gap-1 text-sm font-medium text-stone-500 transition hover:text-terracotta-600"
         >
           Edit this review →
         </Link>
+
+        <form
+          action={deleteReview}
+          onSubmit={(e) => {
+            if (!confirm("Delete this review? This cannot be undone.")) {
+              e.preventDefault();
+            }
+          }}
+        >
+          <input type="hidden" name="id" value={review.id} />
+          <button
+            type="submit"
+            className="rounded-lg px-3 py-1.5 text-xs font-medium text-stone-400 transition-all duration-150 hover:bg-terracotta-50 hover:text-terracotta-600"
+          >
+            Delete review
+          </button>
+        </form>
       </div>
     </div>
   );

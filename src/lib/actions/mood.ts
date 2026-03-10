@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/db";
+import { auth } from "@/auth";
 import { toLocalMidnightUTC } from "@/lib/utils/dates";
 
 export async function logMood(formData: FormData) {
@@ -20,6 +21,18 @@ export async function logMood(formData: FormData) {
     create: { date, score, note },
     update: { score, note },
   });
+
+  revalidatePath("/mood");
+}
+
+export async function deleteMoodLog(formData: FormData) {
+  const session = await auth();
+  if (!session) throw new Error("Unauthorised");
+
+  const id = formData.get("id") as string;
+  if (!id) throw new Error("Mood log ID is required.");
+
+  await prisma.moodLog.delete({ where: { id } });
 
   revalidatePath("/mood");
 }

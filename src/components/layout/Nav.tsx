@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { signOut } from "next-auth/react";
 
 const NAV_LINKS = [
   { href: "/journal", label: "Journal" },
@@ -52,6 +53,15 @@ export function Nav() {
           >
             New entry
           </Link>
+
+          {/* Sign out */}
+          <button
+            onClick={() => signOut({ callbackUrl: "/login" })}
+            className="ml-1 rounded-lg px-3 py-1.5 text-sm font-medium text-stone-400 transition-all duration-150 hover:bg-cream-100 hover:text-stone-600"
+            title="Sign out"
+          >
+            Sign out
+          </button>
         </nav>
       </div>
     </header>

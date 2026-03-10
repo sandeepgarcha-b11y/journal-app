@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/db";
+import { auth } from "@/auth";
 import { toLocalMidnightUTC } from "@/lib/utils/dates";
 import type { GoalStatus } from "@/lib/queries/goals";
 
@@ -80,6 +81,33 @@ export async function addCheckin(formData: FormData) {
   await prisma.goalCheckin.create({
     data: { goalId, note, confidence: validConfidence },
   });
+
+  revalidatePath(`/goals/${goalId}`);
+}
+
+export async function deleteGoal(formData: FormData) {
+  const session = await auth();
+  if (!session) throw new Error("Unauthorised");
+
+  const id = formData.get("id") as string;
+  if (!id) throw new Error("Goal ID is required.");
+
+  // GoalCheckin rows cascade-delete via the schema relation
+  await prisma.goal.delete({ where: { id } });
+
+  revalidatePath("/goals");
+  redirect("/goals");
+}
+
+export async function deleteCheckin(formData: FormData) {
+  const session = await auth();
+  if (!session) throw new Error("Unauthorised");
+
+  const id = formData.get("id") as string;
+  const goalId = formData.get("goalId") as string;
+  if (!id || !goalId) throw new Error("Check-in ID and goal ID are required.");
+
+  await prisma.goalCheckin.delete({ where: { id } });
 
   revalidatePath(`/goals/${goalId}`);
 }

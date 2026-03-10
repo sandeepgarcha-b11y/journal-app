@@ -1,4 +1,5 @@
 import { formatShortDate } from "@/lib/utils/dates";
+import { deleteMoodLog } from "@/lib/actions/mood";
 import type { MoodLog } from "@/lib/queries/mood";
 
 interface MoodHistoryListProps {
@@ -44,6 +45,22 @@ export function MoodHistoryList({ logs }: MoodHistoryListProps) {
               </p>
             )}
           </div>
+          <form
+            action={deleteMoodLog}
+            onSubmit={(e) => {
+              if (!confirm("Delete this mood log?")) e.preventDefault();
+            }}
+          >
+            <input type="hidden" name="id" value={log.id} />
+            <button
+              type="submit"
+              title="Delete log"
+              className="shrink-0 rounded-lg p-1.5 text-stone-300 transition-all duration-150 hover:bg-terracotta-50 hover:text-terracotta-500"
+              aria-label="Delete mood log"
+            >
+              ×
+            </button>
+          </form>
         </div>
       ))}
     </div>

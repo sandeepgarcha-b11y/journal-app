@@ -3,6 +3,7 @@
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/db";
+import { auth } from "@/auth";
 import { toLocalMidnightUTC } from "@/lib/utils/dates";
 
 export async function createEntry(formData: FormData) {
@@ -53,6 +54,19 @@ export async function updateEntry(id: string, formData: FormData) {
       prompts: promptsJson,
     },
   });
+
+  revalidatePath("/journal");
+  redirect("/journal");
+}
+
+export async function deleteEntry(formData: FormData) {
+  const session = await auth();
+  if (!session) throw new Error("Unauthorised");
+
+  const id = formData.get("id") as string;
+  if (!id) throw new Error("Entry ID is required.");
+
+  await prisma.entry.delete({ where: { id } });
 
   revalidatePath("/journal");
   redirect("/journal");
