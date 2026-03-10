@@ -45,7 +45,7 @@ export function CheckinList({ checkins }: CheckinListProps) {
               id={checkin.id}
               label="×"
               confirmMessage="Delete this check-in? This cannot be undone."
-              className="rounded-lg p-1.5 text-stone-300 transition-all duration-150 hover:bg-terracotta-50 hover:text-terracotta-500"
+              className="rounded-lg p-2.5 text-stone-300 transition-all duration-150 hover:bg-terracotta-50 hover:text-terracotta-500"
               extraFields={{ goalId: checkin.goalId }}
             />
           </div>

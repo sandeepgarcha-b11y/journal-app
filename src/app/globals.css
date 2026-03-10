@@ -64,6 +64,14 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* Prevent iOS Safari from zooming the page when an input is focused.
+   iOS zooms when font-size < 16px; this floor ensures we stay at or above it. */
+input:not([type="range"]),
+select,
+textarea {
+  font-size: max(16px, 1em);
+}
+
 /* Smooth range slider thumb across browsers */
 input[type="range"] {
   -webkit-appearance: none;

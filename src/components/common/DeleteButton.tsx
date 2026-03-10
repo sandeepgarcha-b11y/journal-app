@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 interface Props {
   action: (formData: FormData) => Promise<void>;
@@ -22,6 +22,16 @@ export function DeleteButton({
 }: Props) {
   const [open, setOpen] = useState(false);
   const formRef = useRef<HTMLFormElement>(null);
+
+  // Close modal when Escape is pressed
+  useEffect(() => {
+    if (!open) return;
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setOpen(false);
+    };
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  }, [open]);
 
   return (
     <>

@@ -4,6 +4,7 @@ import { useRef } from "react";
 import { DAILY_PROMPTS } from "@/lib/utils/prompts";
 import { createEntry } from "@/lib/actions/entries";
 import { todayDateString } from "@/lib/utils/dates";
+import { SubmitButton } from "@/components/common/SubmitButton";
 
 export function EntryForm() {
   const formRef = useRef<HTMLFormElement>(null);
@@ -58,12 +59,7 @@ export function EntryForm() {
         >
           Cancel
         </a>
-        <button
-          type="submit"
-          className="rounded-xl bg-terracotta-500 px-6 py-2 text-sm font-medium text-white shadow-warm-sm transition-all duration-150 hover:-translate-y-px hover:bg-terracotta-600 hover:shadow-warm active:translate-y-0"
-        >
-          Save entry
-        </button>
+        <SubmitButton>Save entry</SubmitButton>
       </div>
     </form>
   );

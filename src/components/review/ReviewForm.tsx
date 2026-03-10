@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { saveReview } from "@/lib/actions/reviews";
+import { SubmitButton } from "@/components/common/SubmitButton";
 
 interface Section {
   prompt: string;
@@ -92,12 +93,7 @@ export function ReviewForm({
         <p className="text-xs text-stone-400">
           You can save a partial draft and come back later.
         </p>
-        <button
-          type="submit"
-          className="rounded-xl bg-terracotta-500 px-6 py-2 text-sm font-medium text-white shadow-warm-sm transition-all duration-150 hover:-translate-y-px hover:bg-terracotta-600 hover:shadow-warm active:translate-y-0"
-        >
-          Save review
-        </button>
+        <SubmitButton>Save review</SubmitButton>
       </div>
     </form>
   );

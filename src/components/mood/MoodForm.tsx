@@ -4,6 +4,7 @@ import { useState } from "react";
 import { logMood } from "@/lib/actions/mood";
 import { todayDateString } from "@/lib/utils/dates";
 import type { MoodLog } from "@/lib/queries/mood";
+import { SubmitButton } from "@/components/common/SubmitButton";
 
 const SCORE_LABELS: Record<number, string> = {
   1: "Terrible",
@@ -111,12 +112,9 @@ export function MoodForm({ existing }: MoodFormProps) {
         </div>
 
         <div className="flex justify-end">
-          <button
-            type="submit"
-            className="rounded-xl bg-terracotta-500 px-6 py-2 text-sm font-medium text-white shadow-warm-sm transition-all duration-150 hover:-translate-y-px hover:bg-terracotta-600 hover:shadow-warm active:translate-y-0"
-          >
+          <SubmitButton pendingText={isEdit ? "Updating…" : "Saving…"}>
             {isEdit ? "Update" : "Save mood"}
-          </button>
+          </SubmitButton>
         </div>
       </form>
     </div>

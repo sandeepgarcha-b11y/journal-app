@@ -2,6 +2,7 @@
 
 import { createGoal, updateGoal } from "@/lib/actions/goals";
 import type { Goal } from "@/lib/queries/goals";
+import { SubmitButton } from "@/components/common/SubmitButton";
 
 interface GoalFormProps {
   /** Pass an existing goal to put the form in edit mode. */
@@ -70,12 +71,9 @@ export function GoalForm({ existing }: GoalFormProps) {
       </div>
 
       <div className="flex justify-end pt-2">
-        <button
-          type="submit"
-          className="rounded-xl bg-terracotta-500 px-6 py-2 text-sm font-medium text-white shadow-warm-sm transition-all duration-150 hover:-translate-y-px hover:bg-terracotta-600 hover:shadow-warm active:translate-y-0"
-        >
+        <SubmitButton pendingText={existing ? "Saving…" : "Creating…"}>
           {existing ? "Save changes" : "Create goal"}
-        </button>
+        </SubmitButton>
       </div>
     </form>
   );

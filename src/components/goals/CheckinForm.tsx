@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { addCheckin } from "@/lib/actions/goals";
+import { SubmitButton } from "@/components/common/SubmitButton";
 
 interface CheckinFormProps {
   goalId: string;
@@ -80,12 +81,7 @@ export function CheckinForm({ goalId }: CheckinFormProps) {
       </div>
 
       <div className="flex justify-end">
-        <button
-          type="submit"
-          className="rounded-xl bg-terracotta-500 px-5 py-2 text-sm font-medium text-white shadow-warm-sm transition-all duration-150 hover:-translate-y-px hover:bg-terracotta-600 hover:shadow-warm active:translate-y-0"
-        >
-          Add check-in
-        </button>
+        <SubmitButton pendingText="Adding…">Add check-in</SubmitButton>
       </div>
     </form>
   );

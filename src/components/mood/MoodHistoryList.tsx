@@ -53,7 +53,7 @@ export function MoodHistoryList({ logs }: MoodHistoryListProps) {
             id={log.id}
             label="×"
             confirmMessage="Delete this mood log? This cannot be undone."
-            className="shrink-0 rounded-lg p-1.5 text-stone-300 transition-all duration-150 hover:bg-terracotta-50 hover:text-terracotta-500"
+            className="shrink-0 rounded-lg p-2.5 text-stone-300 transition-all duration-150 hover:bg-terracotta-50 hover:text-terracotta-500"
           />
         </div>
       ))}
