@@ -24,4 +24,11 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     signIn: "/login",
     error: "/login",
   },
+  callbacks: {
+    // Without this, the proxy lets everyone through.
+    // Returning false redirects unauthenticated users to pages.signIn (/login).
+    authorized({ auth }) {
+      return !!auth?.user;
+    },
+  },
 });

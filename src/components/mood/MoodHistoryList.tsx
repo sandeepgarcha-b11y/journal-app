@@ -1,3 +1,5 @@
+"use client";
+
 import { formatShortDate } from "@/lib/utils/dates";
 import { deleteMoodLog } from "@/lib/actions/mood";
 import type { MoodLog } from "@/lib/queries/mood";
