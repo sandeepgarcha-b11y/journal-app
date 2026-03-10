@@ -1,3 +1,5 @@
+import { deleteCheckin } from "@/lib/actions/goals";
+import { DeleteButton } from "@/components/common/DeleteButton";
 import type { GoalCheckin } from "@/lib/queries/goals";
 
 interface CheckinListProps {
@@ -26,16 +28,26 @@ export function CheckinList({ checkins }: CheckinListProps) {
       {checkins.map((checkin) => (
         <div key={checkin.id} className="px-5 py-4">
           <div className="mb-1.5 flex items-center justify-between gap-3">
-            <p className="text-xs text-stone-400">
-              {new Date(checkin.createdAt).toLocaleDateString("en-GB", {
-                dateStyle: "medium",
-              })}
-            </p>
-            {checkin.confidence !== null && (
-              <span className="rounded-full bg-cream-100 px-2 py-0.5 text-xs font-medium text-stone-500">
-                {checkin.confidence}/5 · {CONFIDENCE_LABEL[checkin.confidence]}
-              </span>
-            )}
+            <div className="flex items-center gap-2">
+              <p className="text-xs text-stone-400">
+                {new Date(checkin.createdAt).toLocaleDateString("en-GB", {
+                  dateStyle: "medium",
+                })}
+              </p>
+              {checkin.confidence !== null && (
+                <span className="rounded-full bg-cream-100 px-2 py-0.5 text-xs font-medium text-stone-500">
+                  {checkin.confidence}/5 · {CONFIDENCE_LABEL[checkin.confidence]}
+                </span>
+              )}
+            </div>
+            <DeleteButton
+              action={deleteCheckin}
+              id={checkin.id}
+              label="×"
+              confirmMessage="Delete this check-in? This cannot be undone."
+              className="rounded-lg p-1.5 text-stone-300 transition-all duration-150 hover:bg-terracotta-50 hover:text-terracotta-500"
+              extraFields={{ goalId: checkin.goalId }}
+            />
           </div>
           <p className="whitespace-pre-wrap text-sm leading-relaxed text-stone-700">
             {checkin.note}
