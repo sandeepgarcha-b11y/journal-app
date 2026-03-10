@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { signOut } from "next-auth/react";
 
 const NAV_LINKS = [
   { href: "/journal", label: "Journal" },
@@ -54,14 +53,15 @@ export function Nav() {
             New entry
           </Link>
 
-          {/* Sign out */}
-          <button
-            onClick={() => signOut({ callbackUrl: "/login" })}
-            className="ml-1 rounded-lg px-3 py-1.5 text-sm font-medium text-stone-400 transition-all duration-150 hover:bg-cream-100 hover:text-stone-600"
-            title="Sign out"
-          >
-            Sign out
-          </button>
+          {/* Sign out — uses a form POST so it works with credentials sessions */}
+          <form action="/api/auth/signout" method="POST" className="ml-1">
+            <button
+              type="submit"
+              className="rounded-lg px-3 py-1.5 text-sm font-medium text-stone-400 transition-all duration-150 hover:bg-cream-100 hover:text-stone-600"
+            >
+              Sign out
+            </button>
+          </form>
         </nav>
       </div>
     </header>
