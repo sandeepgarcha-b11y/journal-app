@@ -45,32 +45,28 @@ export function Nav() {
             </Link>
           ))}
 
-          <Link
-            href="/journal/new"
-            className="ml-2 rounded-lg bg-terracotta-500 px-4 py-1.5 text-sm font-medium text-white shadow-warm-sm transition-all duration-150 hover:-translate-y-px hover:bg-terracotta-600 hover:shadow-warm active:translate-y-0"
-          >
-            New entry
-          </Link>
+          {/* Separator */}
+          <span className="ml-2 mr-1 h-4 w-px bg-stone-200" aria-hidden="true" />
 
-          <form action={signOutAction} className="ml-1">
+          <form action={signOutAction}>
             <button
               type="submit"
-              className="rounded-lg px-3 py-1.5 text-sm font-medium text-stone-400 transition-all duration-150 hover:bg-cream-100 hover:text-stone-600"
+              title="Sign out"
+              aria-label="Sign out"
+              className="rounded-lg p-2 text-stone-400 transition-all duration-150 hover:bg-cream-100 hover:text-stone-600"
             >
-              Sign out
+              {/* Exit / logout icon */}
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <path d="M6 2H3a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h3" />
+                <polyline points="10 11 13 8 10 5" />
+                <line x1="13" y1="8" x2="5" y2="8" />
+              </svg>
             </button>
           </form>
         </nav>
 
-        {/* ── Mobile: CTA + hamburger ───────────────────────────────── */}
+        {/* ── Mobile: hamburger ────────────────────────────────────── */}
         <div className="flex items-center gap-2 md:hidden">
-          <Link
-            href="/journal/new"
-            className="rounded-lg bg-terracotta-500 px-3 py-1.5 text-sm font-medium text-white shadow-warm-sm transition-all duration-150 hover:bg-terracotta-600 active:scale-95"
-          >
-            New entry
-          </Link>
-
           <button
             type="button"
             onClick={() => setOpen((v) => !v)}
