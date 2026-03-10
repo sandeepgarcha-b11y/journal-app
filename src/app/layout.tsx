@@ -2,6 +2,9 @@ import type { Metadata } from "next";
 import { Nav } from "@/components/layout/Nav";
 import "./globals.css";
 
+// Force all pages to render dynamically — this app requires live DB access
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: "Journal",
   description: "Your personal daily journal",
