@@ -22,7 +22,18 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   ],
   session: {
     strategy: "jwt",
-    maxAge: 0, // session cookie — expires when browser closes
+    maxAge: 24 * 60 * 60, // JWT valid for 24h (keeps it alive during a browser session)
+  },
+  cookies: {
+    sessionToken: {
+      options: {
+        httpOnly: true,
+        sameSite: "lax" as const,
+        path: "/",
+        secure: process.env.NODE_ENV === "production",
+        // No maxAge = browser session cookie (cleared when browser closes)
+      },
+    },
   },
   pages: {
     signIn: "/login",
