@@ -20,6 +20,10 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       },
     }),
   ],
+  session: {
+    strategy: "jwt",
+    maxAge: 0, // session cookie — expires when browser closes
+  },
   pages: {
     signIn: "/login",
     error: "/login",

@@ -17,6 +17,8 @@ export function Nav() {
   const pathname  = usePathname();
   const [open, setOpen] = useState(false);
 
+  if (pathname === "/login") return null;
+
   const linkClass = (href: string) => {
     const isActive = pathname === href || pathname.startsWith(href + "/");
     return `rounded-lg px-3 py-1.5 text-sm font-medium transition-all duration-150 ${
