@@ -4,7 +4,7 @@ import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/db";
 import { auth } from "@/auth";
-import { toLocalMidnightUTC } from "@/lib/utils/dates";
+import { createEntryRecord } from "@/lib/entries";
 
 export async function createEntry(formData: FormData) {
   const dateStr = formData.get("date") as string;
@@ -15,19 +15,10 @@ export async function createEntry(formData: FormData) {
     throw new Error("Entry content cannot be empty.");
   }
 
-  const date = toLocalMidnightUTC(dateStr);
-
-  const promptsJson =
-    prompt && prompt.trim()
-      ? JSON.stringify([{ prompt: prompt.trim(), answer: content.trim() }])
-      : null;
-
-  await prisma.entry.create({
-    data: {
-      date,
-      content: content.trim(),
-      prompts: promptsJson,
-    },
+  await createEntryRecord({
+    body: content,
+    date: dateStr,
+    title: prompt,
   });
 
   revalidatePath("/journal");
