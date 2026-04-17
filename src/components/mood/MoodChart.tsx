@@ -25,12 +25,12 @@ function toY(score: number): number {
   return P.top + IH * (1 - (score - 1) / 9);
 }
 
-// Warm score palette
+// Earthy green score palette
 function scoreColor(s: number): string {
-  if (s >= 8) return "#5A8C61"; // sage-500
-  if (s >= 6) return "#C7A030"; // warm gold
-  if (s >= 4) return "#C47249"; // terracotta-500
-  return "#C45045";             // warm red
+  if (s >= 8) return "#578D4F"; // sage-500 — deep forest green
+  if (s >= 6) return "#7FA83A"; // earthy olive-yellow
+  if (s >= 4) return "#A8B840"; // muted yellow-green
+  return "#C45045";             // warm red (low mood stays red)
 }
 
 // Smooth cubic bezier path — S-curves through all points
@@ -184,10 +184,10 @@ export function MoodChart({ logs }: Props) {
           aria-label="Mood trend chart"
         >
           <defs>
-            {/* Warm area gradient */}
+            {/* Green area gradient */}
             <linearGradient id="mood-area-fill" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%"   stopColor="#C47249" stopOpacity="0.18" />
-              <stop offset="100%" stopColor="#C47249" stopOpacity="0"    />
+              <stop offset="0%"   stopColor="#457F3C" stopOpacity="0.18" />
+              <stop offset="100%" stopColor="#457F3C" stopOpacity="0"    />
             </linearGradient>
             {/* Tooltip shadow */}
             <filter id="mood-tip-shadow" x="-20%" y="-40%" width="140%" height="180%">
@@ -203,7 +203,7 @@ export function MoodChart({ logs }: Props) {
                 y1={toY(v)}
                 x2={VW - P.right}
                 y2={toY(v)}
-                stroke="#F5EEE0"
+                stroke="#CDE0C6"
                 strokeWidth={1.5}
               />
               <text
@@ -246,7 +246,7 @@ export function MoodChart({ logs }: Props) {
             <path
               d={linePath}
               fill="none"
-              stroke="#C47249"
+              stroke="#457F3C"
               strokeWidth={2.5}
               strokeLinecap="round"
               strokeLinejoin="round"
@@ -290,14 +290,14 @@ export function MoodChart({ logs }: Props) {
                     height={TH}
                     rx={6}
                     fill="white"
-                    stroke="#EDE5D8"
+                    stroke="#CDE0C6"
                   />
                   <text
                     x={tx + 8}
                     y={ty + 15}
                     fontSize={12}
                     fontWeight="600"
-                    fill="#1c1917"
+                    fill="#1a2817"
                   >
                     {log.score}/10
                   </text>
